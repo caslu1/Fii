@@ -1,0 +1,44 @@
+name: probe-data-sources
+on:
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: B3 COTAHIST diario
+        run: |
+          UA="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36"
+          for i in 0 1 2 3 4 5; do
+            D=$(date -d "-$i day" +%d%m%Y)
+            CODE=$(curl -s -A "$UA" -o c.zip -w "%{http_code}" "https://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_D$D.ZIP")
+            echo "$D -> $CODE $(stat -c %s c.zip) $(head -c 2 c.zip | xxd -p)"
+            if [ "$(head -c 2 c.zip | xxd -p)" = "504b" ]; then
+              unzip -o -q c.zip -d c; ls -la c; F=$(ls c/* | head -1)
+              grep -a "^01.\{8\}12" "$F" | head -3
+              grep -a "MXRF11" "$F" | head -2
+              echo "FII lines: $(grep -a -c '^01.\{8\}12' "$F")"
+              break
+            fi
+          done
+      - name: CVM informe mensal FII
+        run: |
+          curl -s -I "https://dados.cvm.gov.br/dados/FII/DOC/INF_MENSAL/DADOS/inf_mensal_fii_2026.zip" | head -12
+          curl -s -o cvm.zip "https://dados.cvm.gov.br/dados/FII/DOC/INF_MENSAL/DADOS/inf_mensal_fii_2026.zip"
+          ls -la cvm.zip; unzip -o -q cvm.zip -d cvm; ls -la cvm
+          for f in cvm/*.csv; do echo "== $f"; head -c 1500 "$f" | iconv -f latin1 -t utf8; echo; grep -a "MXRF\|97.521.225" "$f" | tail -2 | iconv -f latin1 -t utf8; echo; done
+      - name: FNET listagem
+        run: |
+          UA="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36"
+          B="https://fnet.bmfbovespa.com.br/fnet/publico"
+          echo "--- geral"
+          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=3&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0" | head -c 3000; echo
+          echo "--- cnpjFundo"
+          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=3&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0&cnpjFundo=97521225000125" | head -c 1500; echo
+          echo "--- cnpj"
+          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=3&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0&cnpj=97521225000125" | head -c 1500; echo
+          ID=$(curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=1&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+          echo "--- doc $ID"
+          curl -s -A "$UA" "$B/downloadDocumento?id=$ID" -o doc.bin; ls -la doc.bin; head -c 300 doc.bin; echo
+          (base64 -d doc.bin 2>/dev/null || cat doc.bin) | head -c 4000
+          echo; echo "--- exibir"
+          curl -s -A "$UA" "$B/exibirDocumento?id=$ID&cvm=true" | head -c 800
