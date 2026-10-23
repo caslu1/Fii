@@ -6,6 +6,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: build
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,20 +22,28 @@ jobs:
         with:
           gradle-version: '8.11.1'
       - name: Build release APK
-        run: gradle assembleRelease --stacktrace --no-daemon
-      - name: Rename APK
         run: |
-          mkdir -p out
-          cp app/build/outputs/apk/release/*.apk out/Cotista.apk
-          ls -la out
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Cotista-apk
-          path: out/Cotista.apk
+          set -o pipefail
+          gradle assembleRelease --no-daemon --console=plain 2>&1 | tee $RUNNER_TEMP/build.log
+      - name: Publish result to branch
+        if: always()
+        run: |
+          mkdir -p $RUNNER_TEMP/out
+          cp $RUNNER_TEMP/build.log $RUNNER_TEMP/out/build.log || true
+          grep -E "^e: |error:|FAILURE|What went wrong|BUILD" $RUNNER_TEMP/build.log > $RUNNER_TEMP/out/errors.txt || true
+          cp app/build/outputs/apk/release/*.apk $RUNNER_TEMP/out/Cotista.apk 2>/dev/null || true
+          echo "${{ github.sha }} run ${{ github.run_number }}" > $RUNNER_TEMP/out/commit.txt
+          cd $RUNNER_TEMP/out
+          git init -q -b build-out
+          git config user.email bot@users.noreply.github.com; git config user.name bot
+          git add -A; git commit -qm "build ${{ github.run_number }}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" build-out
       - name: Publish release
+        if: success()
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0-build${{ github.run_number }}
-          name: Cotista ${{ github.run_number }}
-          files: out/Cotista.apk
+          tag_name: build-${{ github.run_number }}
+          name: Cotista (build ${{ github.run_number }})
+          body: APK de teste do Cotista. Baixe o arquivo Cotista.apk abaixo e instale no Android.
+          files: ${{ runner.temp }}/out/Cotista.apk
           make_latest: true

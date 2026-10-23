@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- prédios / barras crescentes -->
+    <path android:fillColor="#FF1F6B4C" android:pathData="M31,58 h11 a2,2 0 0 1 2,2 v18 h-15 v-18 a2,2 0 0 1 2,-2 z"/>
+    <path android:fillColor="#FF2FA674" android:pathData="M48,48 h11 a2,2 0 0 1 2,2 v28 h-15 v-28 a2,2 0 0 1 2,-2 z"/>
+    <path android:fillColor="#FF3DDC97" android:pathData="M65,36 h11 a2,2 0 0 1 2,2 v40 h-15 v-40 a2,2 0 0 1 2,-2 z"/>
+    <!-- janelas -->
+    <path android:fillColor="#FF0B1A14" android:pathData="M68,42h3v3h-3z M73,42h3v3h-3z M68,49h3v3h-3z M73,49h3v3h-3z M68,56h3v3h-3z M73,56h3v3h-3z M51,54h3v3h-3z M56,54h3v3h-3z M51,61h3v3h-3z M56,61h3v3h-3z"/>
+    <!-- moeda -->
+    <path android:fillColor="#FFF5B841" android:pathData="M40,30 m-10,0 a10,10 0 1 0 20,0 a10,10 0 1 0 -20,0"/>
+    <path android:fillColor="#FF3A2C0C" android:pathData="M39,23.5 h2 v2 c1.8,0.3 3,1.4 3.2,3 h-2.2 c-0.2,-0.8 -1,-1.2 -2,-1.2 c-1.2,0 -1.9,0.5 -1.9,1.2 c0,0.8 0.8,1 2.2,1.4 c2.2,0.5 4,1.2 4,3.3 c0,1.6 -1.2,2.8 -3.3,3.1 v2 h-2 v-2 c-2,-0.3 -3.3,-1.5 -3.4,-3.3 h2.2 c0.1,1 1,1.5 2.2,1.5 c1.3,0 2.1,-0.5 2.1,-1.3 c0,-0.8 -0.7,-1.1 -2.3,-1.5 c-2.1,-0.5 -3.9,-1.1 -3.9,-3.2 c0,-1.5 1.2,-2.7 3.1,-3 z"/>
+    <!-- base -->
+    <path android:fillColor="#FF3DDC97" android:pathData="M27,80 h54 a1.5,1.5 0 0 1 0,3 h-54 a1.5,1.5 0 0 1 0,-3 z"/>
+</vector>
