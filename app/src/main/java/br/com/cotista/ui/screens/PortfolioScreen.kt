@@ -90,7 +90,7 @@ fun PortfolioScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item {
-            Text("Carteira", style = MaterialTheme.typography.headlineSmall, color = C.Text)
+            Text("Carteira", style = MaterialTheme.typography.headlineLarge, color = C.Text)
             Spacer(Modifier.height(8.dp))
         }
         if (state.positions.isEmpty()) {

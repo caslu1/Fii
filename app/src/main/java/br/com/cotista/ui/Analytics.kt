@@ -41,6 +41,9 @@ class PortfolioSummary(positions: List<Position>, funds: Map<String, Fund>, toda
     }
 
     val thisMonth: Double = monthly.last()
+    private val thisMonthPayments = payments.filter { p -> p.dividend.refDate?.let { it.year == today.year && it.month == today.month } == true }
+    val thisMonthReceived: Double = thisMonthPayments.filter { p -> p.dividend.payDate?.isBefore(today) == true }.sumOf { it.amount }
+    val thisMonthPending: Double = thisMonth - thisMonthReceived
     val thisMonthHasEstimates: Boolean = payments.any { p ->
         p.dividend.estimated && p.dividend.refDate?.let { it.year == today.year && it.month == today.month } == true
     }

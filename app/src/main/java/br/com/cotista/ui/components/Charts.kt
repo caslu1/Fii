@@ -71,7 +71,7 @@ fun BarChart(
         ) {
             val n = values.size
             val slot = size.width / n
-            val barW = slot * 0.56f
+            val barW = slot * 0.62f
             // linhas guia
             val dash = PathEffect.dashPathEffect(floatArrayOf(6f, 8f))
             for (i in 1..3) {
@@ -85,18 +85,19 @@ fun BarChart(
                 val est = estimatedFlags?.getOrNull(i) == true
                 val color = when {
                     isSel -> C.Mint
-                    highlightLast && i == n - 1 -> C.Mint.copy(alpha = 0.55f)
-                    else -> C.Mint.copy(alpha = 0.28f)
+                    highlightLast && i == n - 1 -> C.Teal.copy(alpha = 0.7f)
+                    else -> C.Teal.copy(alpha = 0.38f)
                 }
                 // trilho
-                drawRoundRect(C.Surface2, Offset(x, 0f), Size(barW, size.height), CornerRadius(barW / 2.6f))
+                drawRoundRect(C.Surface2.copy(alpha = 0.6f), Offset(x, 0f), Size(barW, size.height), CornerRadius(barW / 2.6f))
                 if (h > 0) {
                     if (est) {
                         drawRoundRect(color, Offset(x, size.height - h), Size(barW, h), CornerRadius(barW / 2.6f),
                             style = Stroke(width = 3f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 6f))))
                     } else {
                         drawRoundRect(
-                            Brush.verticalGradient(listOf(color, color.copy(alpha = color.alpha * 0.55f)), size.height - h, size.height),
+                            if (isSel) Brush.verticalGradient(listOf(C.Mint, C.Teal), size.height - h, size.height)
+                            else Brush.verticalGradient(listOf(color, color.copy(alpha = color.alpha * 0.5f)), size.height - h, size.height),
                             Offset(x, size.height - h), Size(barW, h), CornerRadius(barW / 2.6f),
                         )
                     }

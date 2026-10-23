@@ -1,6 +1,7 @@
 package br.com.cotista.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import br.com.cotista.util.ddMM
 import br.com.cotista.util.pct
 import br.com.cotista.util.relativeDay
 import br.com.cotista.util.weekdayShort
+import br.com.cotista.util.monthShort
 import java.time.LocalDate
 
 @Composable
@@ -69,7 +71,7 @@ fun AgendaScreen(state: UiState, contentPadding: PaddingValues, onOpenFund: (Str
         contentPadding = PaddingValues(16.dp, contentPadding.calculateTopPadding() + 8.dp, 16.dp, contentPadding.calculateBottomPadding() + 24.dp),
     ) {
         item {
-            Text("Agenda de proventos", style = MaterialTheme.typography.headlineSmall, color = C.Text)
+            Text("Agenda", style = MaterialTheme.typography.headlineLarge, color = C.Text)
             Spacer(Modifier.height(4.dp))
             Text("Avisos oficiais publicados na B3 pelos administradores", style = MaterialTheme.typography.bodySmall, color = C.Text3)
             Spacer(Modifier.height(14.dp))
@@ -103,26 +105,32 @@ fun AgendaScreen(state: UiState, contentPadding: PaddingValues, onOpenFund: (Str
                 )
             }
         }
-        var lastDate: LocalDate? = null
-        list.forEach { d ->
-            val date = d.payDate!!
-            if (date != lastDate) {
-                val header = date
-                lastDate = date
-                item(key = "h$header$tab") {
-                    Row(Modifier.padding(top = 18.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(relativeDay(header, today), style = MaterialTheme.typography.titleSmall, color = if (header == today) C.Amber else C.Text)
-                        Spacer(Modifier.width(8.dp))
-                        Text("${header.weekdayShort()}, ${header.ddMM()}", style = MaterialTheme.typography.labelMedium, color = C.Text3)
-                        Spacer(Modifier.weight(1f))
-                        val sum = list.filter { it.payDate == header }.sumOf { (mine[it.ticker]?.quantity ?: 0.0) * it.value }
-                        if (sum > 0) Text(masked(state.hideValues, sum.brl()), style = MaterialTheme.typography.labelLarge, color = C.Mint)
+        val groups = list.groupBy { it.payDate!! }.toList()
+        items(groups, key = { "g${it.first}$tab" }) { (date, rows) ->
+            val isToday = date == today
+            Row(Modifier.fillMaxWidth().padding(top = 14.dp)) {
+                Column(
+                    Modifier.width(54.dp).clip(RoundedCornerShape(16.dp))
+                        .background(if (isToday) C.Amber.copy(alpha = 0.16f) else C.Surface)
+                        .border(1.dp, if (isToday) C.Amber.copy(alpha = 0.5f) else C.Stroke, RoundedCornerShape(16.dp))
+                        .padding(vertical = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(date.weekdayShort().uppercase(), style = MaterialTheme.typography.labelSmall, color = if (isToday) C.Amber else C.Text3)
+                    Text("${date.dayOfMonth}", style = MaterialTheme.typography.headlineSmall, color = if (isToday) C.Amber else C.Text)
+                    Text(date.monthShort().take(3).uppercase(), style = MaterialTheme.typography.labelSmall, color = C.Text3)
+                }
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val sum = rows.sumOf { (mine[it.ticker]?.quantity ?: 0.0) * it.value }
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 4.dp, top = 2.dp)) {
+                        Text(relativeDay(date, today), style = MaterialTheme.typography.labelMedium, color = if (isToday) C.Amber else C.Text2, modifier = Modifier.weight(1f))
+                        if (sum > 0) Text(masked(state.hideValues, "+" + sum.brl()), style = MaterialTheme.typography.labelLarge, color = C.Mint)
+                    }
+                    rows.forEach { d ->
+                        AgendaRow(d, state.funds[d.ticker]?.price, mine[d.ticker]?.quantity, state.hideValues) { onOpenFund(d.ticker) }
                     }
                 }
-            }
-            item(key = "d${d.ticker}${d.kind}${d.comDate}${d.value}$tab") {
-                AgendaRow(d, state.funds[d.ticker]?.price, mine[d.ticker]?.quantity, state.hideValues) { onOpenFund(d.ticker) }
-                Spacer(Modifier.height(8.dp))
             }
         }
     }
@@ -131,11 +139,11 @@ fun AgendaScreen(state: UiState, contentPadding: PaddingValues, onOpenFund: (Str
 @Composable
 private fun AgendaRow(d: Dividend, price: Double?, qty: Double?, hide: Boolean, onClick: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(C.Surface).clickable(onClick = onClick).padding(14.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(C.Surface).border(1.dp, C.borderBrush, RoundedCornerShape(18.dp)).clickable(onClick = onClick).padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        TickerBadge(d.ticker, 42.dp)
-        Spacer(Modifier.width(12.dp))
+        TickerBadge(d.ticker, 38.dp)
+        Spacer(Modifier.width(10.dp))
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(d.ticker, style = MaterialTheme.typography.titleSmall, color = C.Text)

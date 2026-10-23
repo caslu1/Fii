@@ -26,6 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -37,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import br.com.cotista.ui.theme.C
 import br.com.cotista.util.pct
 
-val CardShape = RoundedCornerShape(22.dp)
+val CardShape = RoundedCornerShape(26.dp)
 
 @Composable
 fun Panel(
@@ -45,13 +47,22 @@ fun Panel(
     onClick: (() -> Unit)? = null,
     padding: Dp = 18.dp,
     brush: Brush? = null,
+    glow: Color? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     var m = modifier
         .fillMaxWidth()
         .clip(CardShape)
     m = if (brush != null) m.background(brush) else m.background(C.Surface)
-    m = m.border(1.dp, C.Stroke, CardShape)
+    if (glow != null) {
+        m = m.drawBehind {
+            drawCircle(
+                Brush.radialGradient(listOf(glow.copy(alpha = 0.32f), Color.Transparent), center = Offset(size.width * 0.92f, 0f), radius = size.width * 0.75f),
+                radius = size.width * 0.75f, center = Offset(size.width * 0.92f, 0f),
+            )
+        }
+    }
+    m = m.border(1.dp, C.borderBrush, CardShape)
     if (onClick != null) m = m.clickable(onClick = onClick)
     Column(m.padding(padding), content = content)
 }
@@ -62,7 +73,7 @@ fun SectionTitle(title: String, modifier: Modifier = Modifier, trailing: String?
         modifier.fillMaxWidth().padding(top = 22.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(title, style = MaterialTheme.typography.titleMedium, color = C.Text, modifier = Modifier.weight(1f))
+        Text(title, style = MaterialTheme.typography.titleLarge, color = C.Text, modifier = Modifier.weight(1f))
         if (trailing != null) {
             Text(
                 trailing, style = MaterialTheme.typography.labelLarge, color = C.Mint,
@@ -76,14 +87,16 @@ fun SectionTitle(title: String, modifier: Modifier = Modifier, trailing: String?
 @Composable
 fun TickerBadge(ticker: String, size: Dp = 44.dp) {
     val color = C.forKey(ticker.take(4))
+    val shape = RoundedCornerShape(size * 0.34f)
     Box(
-        Modifier.size(size).clip(RoundedCornerShape(size * 0.32f)).background(color.copy(alpha = 0.14f))
-            .border(1.dp, color.copy(alpha = 0.25f), RoundedCornerShape(size * 0.32f)),
+        Modifier.size(size).clip(shape)
+            .background(Brush.linearGradient(listOf(color.copy(alpha = 0.34f), color.copy(alpha = 0.10f))))
+            .border(1.dp, Brush.verticalGradient(listOf(color.copy(alpha = 0.45f), color.copy(alpha = 0.08f))), shape),
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            ticker.take(4), color = color, fontWeight = FontWeight.Bold,
-            fontSize = (size.value * 0.27f).sp, letterSpacing = 0.sp, maxLines = 1,
+            ticker.take(4), color = Color.White.copy(alpha = 0.92f), fontWeight = FontWeight.ExtraBold,
+            fontSize = (size.value * 0.255f).sp, letterSpacing = (-0.2).sp, maxLines = 1,
         )
     }
 }

@@ -32,6 +32,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -84,17 +89,23 @@ fun HomeScreen(
     ) {
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier.size(42.dp).clip(RoundedCornerShape(14.dp)).background(C.mintBrush),
+                    contentAlignment = Alignment.Center,
+                ) { Icon(Icons.Rounded.Savings, null, tint = C.Bg, modifier = Modifier.size(22.dp)) }
+                Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
                     val h = LocalTime.now().hour
                     Text(when (h) { in 5..11 -> "Bom dia"; in 12..17 -> "Boa tarde"; else -> "Boa noite" },
-                        style = MaterialTheme.typography.bodyMedium, color = C.Text2)
-                    Text("Sua renda passiva", style = MaterialTheme.typography.headlineSmall, color = C.Text)
+                        style = MaterialTheme.typography.bodySmall, color = C.Text3)
+                    Text("Sua renda passiva", style = MaterialTheme.typography.titleLarge, color = C.Text)
                 }
-                IconButton(onClick = onToggleHide) {
-                    Icon(if (hide) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility, "Ocultar valores", tint = C.Text2)
-                }
+                Box(
+                    Modifier.size(42.dp).clip(RoundedCornerShape(14.dp)).background(C.Surface2).clickable(onClick = onToggleHide),
+                    contentAlignment = Alignment.Center,
+                ) { Icon(if (hide) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility, "Ocultar valores", tint = C.Text2, modifier = Modifier.size(20.dp)) }
             }
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(20.dp))
         }
 
         if (state.positions.isEmpty()) {
@@ -105,30 +116,39 @@ fun HomeScreen(
 
         // Herói: proventos do mês
         item {
-            Panel(
-                brush = Brush.linearGradient(listOf(C.MintDeep, C.Surface, C.Surface)),
-                padding = 20.dp,
-            ) {
+            val animated by animateFloatAsState(summary.thisMonth.toFloat(), tween(1100, easing = FastOutSlowInEasing), label = "hero")
+            Panel(brush = C.heroBrush, glow = C.Mint, padding = 22.dp) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Rounded.Savings, null, tint = C.Mint, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Proventos em ${today.monthName()}", style = MaterialTheme.typography.labelLarge, color = C.Mint)
+                    Text(
+                        "PROVENTOS DE ${today.monthName().uppercase()}", style = MaterialTheme.typography.labelSmall, color = C.Mint,
+                        modifier = Modifier.clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = 0.22f)).padding(horizontal = 10.dp, vertical = 5.dp),
+                    )
                     if (summary.thisMonthHasEstimates) { Spacer(Modifier.width(8.dp)); Tag("estimado", C.Amber) }
                 }
-                Spacer(Modifier.height(10.dp))
-                Text(masked(hide, summary.thisMonth.brl()), style = MaterialTheme.typography.displaySmall, color = C.Text)
+                Spacer(Modifier.height(14.dp))
+                Text(masked(hide, animated.toDouble().brl()), style = MaterialTheme.typography.displayMedium, color = C.Text)
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    if (hide) "Projeção mensal R$ •••" else "Projeção pelo último provento: ${summary.projectedMonthly.brl()}/mês",
-                    style = MaterialTheme.typography.bodyMedium, color = C.Text2,
+                    if (hide) "Projeção R$ •••/mês" else "Projeção: ${summary.projectedMonthly.brl()}/mês pelo último provento",
+                    style = MaterialTheme.typography.bodySmall, color = C.Text2,
                 )
+                if (summary.thisMonth > 0) {
+                    Spacer(Modifier.height(18.dp))
+                    val frac = (summary.thisMonthReceived / summary.thisMonth).toFloat().coerceIn(0f, 1f)
+                    Box(Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = 0.28f))) {
+                        Box(Modifier.fillMaxWidth(frac).height(8.dp).clip(RoundedCornerShape(50)).background(C.mintBrush))
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Row {
+                        Text("Recebido ${masked(hide, summary.thisMonthReceived.brl())}", style = MaterialTheme.typography.labelMedium, color = C.Mint, modifier = Modifier.weight(1f))
+                        Text("A receber ${masked(hide, summary.thisMonthPending.brl())}", style = MaterialTheme.typography.labelMedium, color = C.Text2)
+                    }
+                }
                 Spacer(Modifier.height(18.dp))
-                Divider()
-                Spacer(Modifier.height(16.dp))
-                Row {
-                    Stat("Últimos 12m", masked(hide, summary.last12.brl()), Modifier.weight(1f))
-                    Stat("Yield on cost", summary.yieldOnCost.pct(), Modifier.weight(1f), C.Mint)
-                    Stat("DY carteira", summary.dy12.pct(), Modifier.weight(1f))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    HeroTile("12 meses", masked(hide, summary.last12.brl()), Modifier.weight(1f))
+                    HeroTile("Yield on cost", summary.yieldOnCost.pct(), Modifier.weight(1f), C.Mint)
+                    HeroTile("DY carteira", summary.dy12.pct(), Modifier.weight(1f))
                 }
             }
         }
@@ -141,7 +161,7 @@ fun HomeScreen(
                     Column(Modifier.weight(1f)) {
                         Text("PATRIMÔNIO", style = MaterialTheme.typography.labelSmall, color = C.Text3)
                         Spacer(Modifier.height(4.dp))
-                        Text(masked(hide, summary.value.brl()), style = MaterialTheme.typography.headlineMedium, color = C.Text)
+                        Text(masked(hide, summary.value.brl()), style = MaterialTheme.typography.headlineLarge, color = C.Text)
                         Spacer(Modifier.height(2.dp))
                         Text(
                             (if (hide) "" else (if (summary.dayChange >= 0) "+" else "") + summary.dayChange.brl() + " no pregão"),
@@ -241,6 +261,15 @@ fun HomeScreen(
 }
 
 @Composable
+private fun HeroTile(label: String, value: String, modifier: Modifier = Modifier, color: androidx.compose.ui.graphics.Color = C.Text) {
+    Column(modifier.clip(RoundedCornerShape(16.dp)).background(Color.Black.copy(alpha = 0.22f)).padding(horizontal = 12.dp, vertical = 10.dp)) {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = C.Text3, maxLines = 1)
+        Spacer(Modifier.height(3.dp))
+        Text(value, style = MaterialTheme.typography.titleSmall, color = color, maxLines = 1)
+    }
+}
+
+@Composable
 fun PaymentRow(p: Payment, hide: Boolean, today: LocalDate, onClick: () -> Unit) {
     val d = p.dividend
     Row(
@@ -267,7 +296,7 @@ fun PaymentRow(p: Payment, hide: Boolean, today: LocalDate, onClick: () -> Unit)
 
 @Composable
 private fun Onboarding(state: UiState, onAdd: (String?) -> Unit) {
-    Panel(brush = Brush.linearGradient(listOf(C.MintDeep, C.Surface)), padding = 22.dp) {
+    Panel(brush = C.heroBrush, glow = C.Mint, padding = 22.dp) {
         Text("Acompanhe seus FIIs com dados oficiais", style = MaterialTheme.typography.titleLarge, color = C.Text)
         Spacer(Modifier.height(8.dp))
         Text(

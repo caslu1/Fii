@@ -10,7 +10,21 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import br.com.cotista.data.Position
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -91,9 +105,45 @@ private val tabs = listOf(
     Tab("explorar", "Explorar", Icons.Rounded.Explore),
 )
 
+@Composable
+private fun FloatingNav(route: String, modifier: Modifier, onSelect: (String) -> Unit) {
+    val shape = RoundedCornerShape(30.dp)
+    Box(modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 18.dp, vertical = 10.dp)) {
+        Row(
+            Modifier.fillMaxWidth()
+                .shadow(28.dp, shape, ambientColor = Color.Black, spotColor = Color.Black)
+                .clip(shape)
+                .background(C.Surface2.copy(alpha = 0.97f))
+                .border(1.dp, C.borderBrush, shape)
+                .padding(6.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            tabs.forEach { t ->
+                val sel = route == t.route
+                Row(
+                    Modifier.clip(RoundedCornerShape(24.dp))
+                        .background(if (sel) C.mintBrush else Brush.linearGradient(listOf(Color.Transparent, Color.Transparent)))
+                        .clickable { onSelect(t.route) }
+                        .animateContentSize()
+                        .padding(horizontal = if (sel) 16.dp else 14.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(t.icon, t.label, tint = if (sel) C.Bg else C.Text3, modifier = Modifier.size(22.dp))
+                    if (sel) {
+                        Spacer(Modifier.width(6.dp))
+                        Text(t.label, color = C.Bg, style = MaterialTheme.typography.labelLarge)
+                    }
+                }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppRoot(vm: AppViewModel = viewModel()) {
+    val activity = LocalContext.current as? ComponentActivity
     val state by vm.state.collectAsStateWithLifecycle()
     val nav = rememberNavController()
     val entry by nav.currentBackStackEntryAsState()
@@ -112,33 +162,10 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
 
     Scaffold(
         containerColor = C.Bg,
-        bottomBar = {
-            if (isTab) {
-                NavigationBar(containerColor = C.Surface, tonalElevation = 0.dp) {
-                    tabs.forEach { t ->
-                        NavigationBarItem(
-                            selected = route == t.route,
-                            onClick = {
-                                nav.navigate(t.route) {
-                                    popUpTo(nav.graph.findStartDestination().id) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = { Icon(t.icon, t.label) },
-                            label = { Text(t.label) },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = C.Mint, selectedTextColor = C.Mint, indicatorColor = C.MintDeep,
-                                unselectedIconColor = C.Text3, unselectedTextColor = C.Text3,
-                            ),
-                        )
-                    }
-                }
-            }
-        },
         floatingActionButton = {
             if (route == "carteira" && state.positions.isNotEmpty()) {
                 ExtendedFloatingActionButton(
+                    modifier = Modifier.padding(bottom = 84.dp),
                     onClick = { openSheet(null) }, containerColor = C.Mint, contentColor = C.Bg,
                     shape = RoundedCornerShape(18.dp),
                     icon = { Icon(Icons.Rounded.Add, null) }, text = { Text("Adicionar") },
@@ -146,7 +173,9 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
             }
         },
     ) { inner ->
-        val pad = PaddingValues(top = inner.calculateTopPadding(), bottom = inner.calculateBottomPadding())
+        val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        val pad = PaddingValues(bottom = if (isTab) navBottom + 84.dp else navBottom)
+        Box(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxSize()) {
             Box(Modifier.statusBarsPadding())
             Warnings(state)
@@ -177,6 +206,34 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
                 }
             }
         }
+        if (isTab) {
+            FloatingNav(route, Modifier.align(Alignment.BottomCenter)) { r ->
+                nav.navigate(r) {
+                    popUpTo(nav.graph.findStartDestination().id) { saveState = true }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        }
+        }
+    }
+
+    // modo demonstração / navegação por intent (usado para capturas de tela)
+    LaunchedEffect(state.funds.isNotEmpty()) {
+        if (state.funds.isEmpty()) return@LaunchedEffect
+        val act = activity ?: return@LaunchedEffect
+        val intent = act.intent
+        if (intent.getBooleanExtra("demo", false) && state.positions.isEmpty()) {
+            listOf(
+                Position("MXRF11", 1200.0, 9.62), Position("HGLG11", 45.0, 158.40), Position("KNRI11", 30.0, 139.10),
+                Position("XPML11", 60.0, 104.80), Position("BTLG11", 50.0, 99.30), Position("VISC11", 55.0, 108.20),
+            ).filter { state.funds.containsKey(it.ticker) }.forEach(vm::savePosition)
+        }
+        intent.getStringExtra("tab")?.let { t ->
+            nav.navigate(t) { launchSingleTop = true }
+        }
+        intent.getStringExtra("fund")?.let { f -> nav.navigate("fii/$f") }
+        intent.removeExtra("tab"); intent.removeExtra("fund")
     }
 
     if (sheetOpen) {
@@ -220,8 +277,8 @@ private fun Warnings(state: UiState) {
 private fun Splash(state: UiState) {
     Box(Modifier.fillMaxSize().background(C.Bg), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
-            Box(Modifier.size(84.dp).clip(RoundedCornerShape(26.dp)).background(C.MintDeep), contentAlignment = Alignment.Center) {
-                Text("C", style = MaterialTheme.typography.displaySmall, color = C.Mint)
+            Box(Modifier.size(84.dp).clip(RoundedCornerShape(28.dp)).background(C.mintBrush), contentAlignment = Alignment.Center) {
+                Text("C", style = MaterialTheme.typography.displayMedium, color = C.Bg)
             }
             Spacer(Modifier.height(20.dp))
             Text("Cotista", style = MaterialTheme.typography.headlineMedium, color = C.Text)

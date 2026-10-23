@@ -1,6 +1,7 @@
 package br.com.cotista.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -77,10 +78,37 @@ fun ExploreScreen(state: UiState, contentPadding: PaddingValues, onOpenFund: (St
         contentPadding = PaddingValues(16.dp, contentPadding.calculateTopPadding() + 8.dp, 16.dp, contentPadding.calculateBottomPadding() + 24.dp),
     ) {
         item {
-            Text("Explorar FIIs", style = MaterialTheme.typography.headlineSmall, color = C.Text)
+            Text("Explorar", style = MaterialTheme.typography.headlineLarge, color = C.Text)
             Spacer(Modifier.height(4.dp))
             Text("${liquid.size} fundos negociados na B3", style = MaterialTheme.typography.bodySmall, color = C.Text3)
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(16.dp))
+            val top = remember(liquid) {
+                liquid.filter { (it.quote?.volume ?: 0.0) > 1_000_000 && (it.dyLast ?: 0.0) in 0.004..0.025 }
+                    .sortedByDescending { it.dyLast }.take(10)
+            }
+            if (top.isNotEmpty()) {
+                Text("MAIORES DIVIDEND YIELDS", style = MaterialTheme.typography.labelSmall, color = C.Text3)
+                Spacer(Modifier.height(10.dp))
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    items(top, key = { "top" + it.ticker }) { f ->
+                        Column(
+                            Modifier.width(148.dp).clip(RoundedCornerShape(22.dp))
+                                .background(androidx.compose.ui.graphics.Brush.linearGradient(listOf(C.forKey(f.ticker.take(4)).copy(alpha = 0.22f), C.Surface)))
+                                .border(1.dp, C.borderBrush, RoundedCornerShape(22.dp))
+                                .clickable { onOpenFund(f.ticker) }.padding(14.dp),
+                        ) {
+                            TickerBadge(f.ticker, 34.dp)
+                            Spacer(Modifier.height(12.dp))
+                            Text(f.ticker, style = MaterialTheme.typography.titleSmall, color = C.Text)
+                            Text(f.segment, style = MaterialTheme.typography.labelSmall, color = C.Text3, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Spacer(Modifier.height(10.dp))
+                            Text(f.dyLast?.pct() ?: "—", style = MaterialTheme.typography.headlineSmall, color = C.Mint)
+                            Text("ao mês · ${f.price?.brl() ?: ""}", style = MaterialTheme.typography.labelMedium, color = C.Text2)
+                        }
+                    }
+                }
+                Spacer(Modifier.height(18.dp))
+            }
             OutlinedTextField(
                 value = query, onValueChange = { query = it }, singleLine = true,
                 placeholder = { Text("Buscar por código ou nome") },
@@ -121,7 +149,7 @@ fun ExploreScreen(state: UiState, contentPadding: PaddingValues, onOpenFund: (St
 @Composable
 fun FundRow(f: Fund, onClick: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(C.Surface).clickable(onClick = onClick).padding(14.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(C.Surface).border(1.dp, C.borderBrush, RoundedCornerShape(20.dp)).clickable(onClick = onClick).padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         TickerBadge(f.ticker, 42.dp)
