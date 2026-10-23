@@ -1,0 +1,115 @@
+########## 
+23102026 -> 404 103 5468
+22102026 -> 200 450312 504b
+total 3520
+drwxr-xr-x 2 runner runner    4096 Oct 23 03:46 .
+drwxr-xr-x 6 runner runner    4096 Oct 23 03:46 ..
+-rw-r--r-- 1 runner runner 3592369 Oct 22 20:22 COTAHIST_D22102026.TXT
+012026102212MAXR11      010FII MAX RET CI           R$  000000000544800000000054920000000005350000000000543300000000054920000000005356000000000549200016000000000000000071000000000000385744000000000000009999123100000010000000000000BRMAXRCTF009296
+012026102212BCIA11      010FII BCIA    CI           R$  000000000909900000000090990000000008940000000000898900000000089830000000008950000000000897900708000000000000007731000000000069500975000000000000009999123100000010000000000000BRBCIACTF005238
+012026102212BCRI11      010FII BEES CRICI           R$  000000000581500000000058760000000005800000000000583500000000058750000000005823000000000587500297000000000000002876000000000016783262000000000000009999123100000010000000000000BRBCRICTF009243
+grep: write error: Broken pipe
+012026102212MXRF11      010FII MAXI RENCI           R$  000000000094700000000009480000000000938000000000094100000000009480000000000947000000000094875826000000000002191339000000002064168797000000000000009999123100000010000000000000BRMXRFCTF008283
+012026102293MXRF11Q     021FII MAXI RENCI           R$  000000000093500000000009350000000000935000000000093500000000009350000000000000000000000000000003000000000000374332000000000350000420000000000000009999123100000010000000000000BRMXRFCTF008283
+FII lines: 281
+########## 
+HTTP/2 200 
+date: Fri, 23 Oct 2026 03:46:10 GMT
+content-type: application/zip
+content-length: 1266783
+server: cloudflare
+last-modified: Sat, 17 Oct 2026 17:39:11 GMT
+etag: "6ad3b2bf-13545f"
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-xss-protection: 1; mode=block
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+referrer-policy: strict-origin
+-rw-r--r-- 1 runner runner 1266783 Oct 23 03:46 cvm.zip
+total 8860
+drwxr-xr-x 2 runner runner    4096 Oct 23 03:46 .
+drwxr-xr-x 7 runner runner    4096 Oct 23 03:46 ..
+-rw-r--r-- 1 runner runner 2540093 Oct 17 14:39 inf_mensal_fii_ativo_passivo_2026.csv
+-rw-r--r-- 1 runner runner 1863463 Oct 17 14:37 inf_mensal_fii_complemento_2026.csv
+-rw-r--r-- 1 runner runner 4655818 Oct 17 14:36 inf_mensal_fii_geral_2026.csv
+== cvm/inf_mensal_fii_ativo_passivo_2026.csv
+CNPJ_Fundo_Classe;Data_Referencia;Versao;Total_Necessidades_Liquidez;Disponibilidades;Titulos_Publicos;Titulos_Privados;Fundos_Renda_Fixa;Total_Investido;Direitos_Bens_Imoveis;Terrenos;Imoveis_Renda_Acabados;Imoveis_Renda_Construcao;Imoveis_Venda_Acabados;Imoveis_Venda_Construcao;Outros_Direitos_Reais;Acoes;Debentures;Bonus_Subscricao;Certificados_Deposito_Valores_Mobiliarios;Cedulas_Debentures;Fundo_Acoes;FIP;FII;FDIC;Outras_Cotas_FI;Notas_Promissorias;Acoes_Sociedades_Atividades_FII;Cotas_Sociedades_Atividades_FII;CEPAC;CRI;CRI_CRA;Letras_Hipotecarias;LCI;LCI_LCA;LIG;Outros_Valores_Mobliarios;Valores_Receber;Contas_Receber_Aluguel;Contas_Receber_Venda_Imoveis;Outros_Valores_Receber;Rendimentos_Distribuir;Taxa_Administracao_Pagar;Taxa_Performance_Pagar;Obrigacoes_Aquisicao_Imoveis;Adiantamento_Venda_Imoveis;Adiantamento_Alugueis;Obrigacoes_Securitizacao_Recebiveis;Instrumentos_Financeiros_Derivativos;Provisoes_Contigencias;Outros_Valores_Pagar;Total_Passivo
+00.332.266/0001-31;2026-01-01;2;3785066.56;2000;;;3783066.56;249100000;249100000;;249100000;;;;;;;;;;;;;;;;;;;;;;;;;;6850689.95;433514.97;;6417174.98;1132796.07;56647.16;;;;;;;;344176.61;1533619.84
+00.332.266/0001-31;2026-02-01;2;5266566.39;2000;;;5264566.39;249100000;249100000;;249100000;;;;;;;;;;;;;;;;;;;;;;;;;;5475519.62;611363.27;;4864156.35;1132852.07;56647.16;;;;;;;;311889.91;1501389.14
+00.332.266/0001-31;2026-03-01;1;5257171.57;2000;;;5255171.57;249100000;249100000;;249100000;;;;;;;;;;;;;;;;;;;;;;;;;;5610267.3;7
+97.521.225/0001-25;2026-08-01;1;421370633.04;0;0;0;421370633.04;4932716218.12;156155270;0;0;0;156155270;0;0;0;0;0;0;;0;0;656273057.64;0;0;0;351572106.14;0;0;;3768715784.34;0;;0;0;0;18688934.94;0;0;18688934.94;49016325.04;3938443.97;0;67208210.01;0;0;0;0;0;185607.18;120348586.2
+97.521.225/0001-25;2026-09-01;1;292940344.69;63693.8;0;0;292876650.89;5176421015.19;287878537.64;0;0;0;287878537.64;0;0;0;0;0;0;;0;0;718369408.35;0;0;0;277249019.14;0;0;;3892924050.06;0;;0;0;0;20586904.65;0;0;20586904.65;48047514.41;3857211.93;0;133069843.81;0;0;0;0;0;150609.34;185125179.49
+
+== cvm/inf_mensal_fii_complemento_2026.csv
+CNPJ_Fundo_Classe;Data_Referencia;Versao;Data_Informacao_Numero_Cotistas;Total_Numero_Cotistas;Numero_Cotistas_Pessoa_Fisica;Numero_Cotistas_Pessoa_Juridica_Nao_Financeira;Numero_Cotistas_Banco_Comercial;Numero_Cotistas_Corretora_Distribuidora;Numero_Cotistas_Outras_Pessoas_Juridicas_Financeira;Numero_Cotistas_Investidores_Nao_Residentes;Numero_Cotistas_Entidade_Aberta_Previdencia_Complementar;Numero_Cotistas_Entidade_Fechada_Previdência_Complementar;Numero_Cotistas_Regime_Proprio_Previdencia_Servidores_Publicos;Numero_Cotistas_Sociedade_Seguradora_Resseguradora;Numero_Cotistas_Sociedade_Capitalizacao_Arrendamento_Mercantil;Numero_Cotistas_FII;Numero_Cotistas_Outros_Fundos;Numero_Cotistas_Distribuidores_Fundo;Numero_Cotistas_Outros_Tipos;Valor_Ativo;Patrimonio_Liquido;Cotas_Emitidas;Valor_Patrimonial_Cotas;Percentual_Despesas_Taxa_Administracao;Percentual_Despesas_Agente_Custodiante;Percentual_Rentabilidade_Efetiva_Mes;Percentual_Rentabilidade_Patrimonial_Mes;Percentual_Dividend_Yield_Mes;Percentual_Amortizacao_Cotas_Mes
+00.332.266/0001-31;2026-01-01;2;2026-01-30;3639;;;;;;;;;;;;;;;;259735756.51;258202136.67;2800149;92.2101419138767;0.000219;2.5E-05;0.005242;0.0009;0.004342;0
+00.332.266/0001-31;2026-02-01;2;2026-02-27;3578;;;;;;;;;;;;;;;;259842086.01;258340696.87;2800149;92.2596250663804;0.000219;2.1E-05;0.004874;0.000536;0.004338;0
+00.332.266/0001-31;2026-03-01;1;2026-03-31;3521;3502;6;;;;1;;1;;;;9;2;;;259967438.87;258449748.92;2800149;92.2985701546596;0.000219;2.6E-05;0.
+97.521.225/0001-25;2026-08-01;1;2026-08-31;1529305;1528351;891;2;0;0;24;3;1;0;0;2;10;17;0;4;5372775786.1;5252427199.9;567206273;9.260171;0.00075;0;0.009875;-0.000251;0.010126;0
+97.521.225/0001-25;2026-09-01;1;2026-09-30;1570595;1569621;912;2;0;0;24;3;0;0;0;3;8;18;0;4;5489948264.53;5304823085.04;567206273;9.352547;0.000727;0;0.02059;0.009976;0.010614;0
+
+== cvm/inf_mensal_fii_geral_2026.csv
+Tipo_Fundo_Classe;CNPJ_Fundo_Classe;Data_Referencia;Versao;Data_Entrega;Nome_Fundo_Classe;Data_Funcionamento;Publico_Alvo;Codigo_ISIN;Quantidade_Cotas_Emitidas;Fundo_Exclusivo;Cotistas_Vinculo_Familiar;Mandato;Segmento_Atuacao;Tipo_Gestao;Prazo_Duracao;Data_Prazo_Duracao;Encerramento_Exercicio_Social;Mercado_Negociacao_Bolsa;Mercado_Negociacao_MBO;Mercado_Negociacao_MB;Entidade_Administradora_BVMF;Entidade_Administradora_CETIP;Nome_Administrador;CNPJ_Administrador;Logradouro;Numero;Complemento;Bairro;Cidade;Estado;CEP;Telefone1;Telefone2;Telefone3;Site;Email
+Classe;00.332.266/0001-31;2026-01-01;2;2026-03-17;VIA PARQUE SHOPPING FII RESP LTDA;1994-11-24;INVESTIDORES EM GERAL;BRFVPQCTF015;2800149;N;N;;Shoppings;Definida;Indeterminado;;31/12;S;N;N;S;N;HEDGE INVESTMENTS DTVM LTDA;07253654000176;AVENIDA BRIGADEIRO FARIA LIMA;3600;11º ANDAR CJ 112;ITAIM BIBI;SÃO PAULO;SP;04538-132;(11) 5412-5400;;;www.hedgeinvest.com.br;dtvm@hedgeinvest.com.br
+Classe;00.332.266/0001-31;2026-02-01;2;2026-03-17;VIA PARQUE SHOPPING FII RESP LTDA;1994-11-24;INVESTIDORES EM GERAL;BRFVPQCTF015;2800149;N;N;;Shoppings;Definida;Indeterminado;;31/12;S;N;N;S;N;HEDGE INVESTMENTS DTVM LTDA;07253654000176;AVENIDA BRIGADEIRO FARIA LIMA;3600;11º ANDAR CJ 112;ITAIM BIBI;SÃO PAULO;SP;04538-132;(11) 5412-5400;;;www.hedgeinvest.com.br;dtvm@hedgeinvest.com.br
+Classe;00.332.266/0001-31;2026-03-01;1;2026-04-14;VIA PARQUE SHOPPING FII RESP LTDA;1994-11-24;INVESTIDORES EM GERAL;BRFVPQCTF015;2800149;N;N;;Shoppings;Definid
+Classe;97.521.225/0001-25;2026-08-01;1;2026-09-15;FII MAXI RENDA RL;2012-04-13;INVESTIDORES EM GERAL;BRMXRFCTF008;567206273;N;N;;Logística;Ativa;Indeterminado;;31/12;S;N;N;S;N;BTG PACTUAL SERVICOS FINANCEIROS S.A. DISTRIBUIDOR;59281253000123;Praia de Botafogo;501;6º Andar;Botafogo;Rio de Janeiro;RJ;22.250-040;55 11 3383-3102;;;www.btgpactual.com;ri.fundoslistados@btgpactual.com
+Classe;97.521.225/0001-25;2026-09-01;1;2026-10-15;FII MAXI RENDA RL;2012-04-13;INVESTIDORES EM GERAL;BRMXRFCTF008;567206273;N;N;;Logística;Ativa;Indeterminado;;31/12;S;N;N;S;N;BTG PACTUAL SERVICOS FINANCEIROS S.A. DISTRIBUIDOR;59281253000123;Praia de Botafogo;501;6º Andar;Botafogo;Rio de Janeiro;RJ;22.250-040;55 11 3383-3102;;;www.btgpactual.com;ri.fundoslistados@btgpactual.com
+
+########## 
+--- geral
+{"data":[{"altaPrioridade":false,"analisado":"S","arquivoEstruturado":" ","assuntos":null,"categoriaDocumento":"Aviso aos Cotistas - Estruturado","cnpjAdministrador":null,"cnpjFundo":null,"codSegNegociacao":null,"dataEntrega":"22/10/2026 17:05","dataReferencia":"22/10/2026","dda":null,"descricaoFundo":"ITAÚ TEMPUS FUNDO DE INVESTIMENTO IMOBILIÁRIO RESPONSABILIDADE LIMITADA","descricaoModalidade":"Apresentação","descricaoStatus":"Ativo com visualização","especieDocumento":"","formatoDataReferencia":"3","formatoEstruturaDocumento":null,"fundoOuClasse":"Classe","id":1356605,"idEntidadeGerenciadora":null,"idFundo":null,"idSelectItemConvenio":0,"idSelectNotificacaoConvenio":null,"idTemplate":0,"indicadorFundoAtivoB3":false,"informacoesAdicionais":"FII ITAU TEM;","modalidade":"AP","nomeAdministrador":null,"nomePregao":"FII ITAU TEM","nomePrimeiraVisualizacao":null,"numeroEmissao":null,"ofertaPublica":null,"situacaoDocumento":"A","status":"AC","tipoDocumento":"Rendimentos e Amortizações","tipoPedido":null,"versao":1},{"altaPrioridade":false,"analisado":"N","arquivoEstruturado":" ","assuntos":null,"categoriaDocumento":"Aviso aos Cotistas - Estruturado","cnpjAdministrador":null,"cnpjFundo":null,"codSegNegociacao":null,"dataEntrega":"22/10/2026 17:00","dataReferencia":"22/10/2026","dda":null,"descricaoFundo":"BTG LOG AAA CAJAMAR FUNDO DE INVESTIMENTO IMOBILIÁRIO RESPONSABILIDADE LIMITADA","descricaoModalidade":"Apresentação","descricaoStatus":"Ativo com visualização","especieDocumento":"","formatoDataReferencia":"3","formatoEstruturaDocumento":null,"fundoOuClasse":"Classe","id":1356601,"idEntidadeGerenciadora":null,"idFundo":null,"idSelectItemConvenio":0,"idSelectNotificacaoConvenio":null,"idTemplate":0,"indicadorFundoAtivoB3":false,"informacoesAdicionais":";","modalidade":"AP","nomeAdministrador":null,"nomePregao":"","nomePrimeiraVisualizacao":null,"numeroEmissao":null,"ofertaPublica":null,"situacaoDocumento":"A","status":"AC","tipoDocumento":"Rendimentos e Amortizações","tipoPedido":null,"versao":1},{"altaPrioridade":false,"analisado":"N","arquivoEstruturado":" ","assuntos":null,"categoriaDocumento":"Aviso aos Cotistas - Estruturado","cnpjAdministrador":null,"cnpjFundo":null,"codSegNegociacao":null,"dataEntrega":"22/10/2026 17:00","dataReferencia":"22/10/2026","dda":null,"descricaoFundo":"BTG PACTUAL PRIME LOGÍSTICA FUNDO DE INVESTIMENTO IMOBILIÁRIO RESPONSABILIDADE LIMITADA","descricaoModalidade":"Apresentação","descricaoStatus":"Ativo com visualização","especieDocumento":"","formatoDataReferencia":"3","formatoEstruturaDocumento":null,"fundoOuClasse":"Classe","id":1356600,"idEntidadeGerenciadora":null,"idFundo":null,"idSelectItemConvenio":0,"idSelectNotificacaoConvenio":null,"idTemplate":0,"indicadorFundoAtivoB3":false,"informacoesAdicionais":";","modalidade":"AP","nomeAdministrador":null,"nomePregao":"","nomePrimeiraVisualizacao":null,"numeroEmissao":null,"ofertaPublica":null,"situacaoDocumento":"A","status":"AC","tipoDocumento":"R
+--- cnpjFundo
+{"data":[{"altaPrioridade":false,"analisado":"S","arquivoEstruturado":" ","assuntos":null,"categoriaDocumento":"Aviso aos Cotistas - Estruturado","cnpjAdministrador":null,"cnpjFundo":null,"codSegNegociacao":null,"dataEntrega":"30/09/2026 17:06","dataReferencia":"30/09/2026","dda":null,"descricaoFundo":"MAXI RENDA FUNDO DE INVESTIMENTO IMOBILIÁRIO - FII - RESPONSABILIDADE LIMITADA","descricaoModalidade":"Apresentação","descricaoStatus":"Ativo com visualização","especieDocumento":"","formatoDataReferencia":"3","formatoEstruturaDocumento":null,"fundoOuClasse":"Classe","id":1335757,"idEntidadeGerenciadora":null,"idFundo":null,"idSelectItemConvenio":0,"idSelectNotificacaoConvenio":null,"idTemplate":0,"indicadorFundoAtivoB3":false,"informacoesAdicionais":"FII MAXI REN;","modalidade":"AP","nomeAdministrador":null,"nomePregao":"FII MAXI REN","nomePrimeiraVisualizacao":null,"numeroEmissao":null,"ofertaPublica":null,"situacaoDocumento":"A","status":"AC","tipoDocumento":"Rendimentos e Amortizações","tipoPedido":null,"versao":1},{"altaPrioridade":false,"analisado":"S","arquivoEstruturado":" ","assuntos":null,"categoriaDocumento":"Aviso aos Cotistas - Estruturado","cnpjAdministrador":null,"cnpjFundo":null,"codSegNegociacao":null,"dataEntrega":"31/08/2026 17:25","dataReferencia":"31/08/2026","dda":null,"descricaoFundo":"MAXI RENDA FUNDO DE INVESTIMENTO IMOBILIÁRIO - FII - RESPONSABILIDADE LIMITADA","descricaoModalidade":"Apresentação","descricaoStatus":"Ativo com visualização",
+--- cnpj
+{"data":[{"altaPrioridade":false,"analisado":"S","arquivoEstruturado":" ","assuntos":null,"categoriaDocumento":"Aviso aos Cotistas - Estruturado","cnpjAdministrador":null,"cnpjFundo":null,"codSegNegociacao":null,"dataEntrega":"22/10/2026 17:05","dataReferencia":"22/10/2026","dda":null,"descricaoFundo":"ITAÚ TEMPUS FUNDO DE INVESTIMENTO IMOBILIÁRIO RESPONSABILIDADE LIMITADA","descricaoModalidade":"Apresentação","descricaoStatus":"Ativo com visualização","especieDocumento":"","formatoDataReferencia":"3","formatoEstruturaDocumento":null,"fundoOuClasse":"Classe","id":1356605,"idEntidadeGerenciadora":null,"idFundo":null,"idSelectItemConvenio":0,"idSelectNotificacaoConvenio":null,"idTemplate":0,"indicadorFundoAtivoB3":false,"informacoesAdicionais":"FII ITAU TEM;","modalidade":"AP","nomeAdministrador":null,"nomePregao":"FII ITAU TEM","nomePrimeiraVisualizacao":null,"numeroEmissao":null,"ofertaPublica":null,"situacaoDocumento":"A","status":"AC","tipoDocumento":"Rendimentos e Amortizações","tipoPedido":null,"versao":1},{"altaPrioridade":false,"analisado":"N","arquivoEstruturado":" ","assuntos":null,"categoriaDocumento":"Aviso aos Cotistas - Estruturado","cnpjAdministrador":null,"cnpjFundo":null,"codSegNegociacao":null,"dataEntrega":"22/10/2026 17:00","dataReferencia":"22/10/2026","dda":null,"descricaoFundo":"BTG LOG AAA CAJAMAR FUNDO DE INVESTIMENTO IMOBILIÁRIO RESPONSABILIDADE LIMITADA","descricaoModalidade":"Apresentação","descricaoStatus":"Ativo com visualização","espe
+--- doc 1356605
+-rw-r--r-- 1 runner runner 976 Oct 23 03:46 doc.bin
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DadosEconomicoFinanceiros>
+	<DadosGerais>
+		<NomeFundo>ITAÚ TEMPUS FUNDO DE INVESTIMENTO IMOBILIÁRIO</NomeFundo>
+		<CNPJFundo>42737077000199</CNPJFundo>
+		<NomeAdministrador>INTRAG DTVM</NomeAdministrador>
+		<CNPJAdministrador>62418140
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DadosEconomicoFinanceiros>
+	<DadosGerais>
+		<NomeFundo>ITAÚ TEMPUS FUNDO DE INVESTIMENTO IMOBILIÁRIO</NomeFundo>
+		<CNPJFundo>42737077000199</CNPJFundo>
+		<NomeAdministrador>INTRAG DTVM</NomeAdministrador>
+		<CNPJAdministrador>62418140000131</CNPJAdministrador>
+		<ResponsavelInformacao>RENATO CHAPCHAP</ResponsavelInformacao>
+		<TelefoneContato>011 30726087</TelefoneContato>
+		<DataInformacao>2026-10-22</DataInformacao>
+		<Ano>2026</Ano>
+	</DadosGerais>
+	<InformeRendimentos>
+		<Provento>
+			<CodISIN>BRTMPSCTF003</CodISIN>
+			<CodNegociacao>TMPS11</CodNegociacao>
+			<Amortizacao tipo="Parcial">
+				<AtoSocietarioAprovacao/>
+				<DataBase>2026-10-22</DataBase>
+				<ValorProvento>6.5</ValorProvento>
+				<DataPagamento>2026-10-29</DataPagamento>
+				<PeriodoReferencia>OUTUBRO 2026</PeriodoReferencia>
+			</Amortizacao>
+		</Provento>
+	</InformeRendimentos>
+</DadosEconomicoFinanceiros>
+
+--- exibir
+<html>
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Informa&ccedil;&otilde;es sobre Pagamento de Proventos - FUNDOS</title>
+        <script type="text/javascript" src="/fnet/ruxitagentjs_ICANVfgqru_10345260810170330.js" data-dtconfig="app=97e61c3a8a7c6a0b|cuc=wj11fgxl|owasp=1|mel=100000|featureHash=ICANVfgqru|dpvc=1|lastModification=1791724869703|tp=500,50,0|rdnt=1|uxrgce=1|srbbv=2|agentUri=/fnet/ruxitagentjs_ICANVfgqru_10345260810170330.js|reportUrl=/fnet/rb_3e3688fc-2b0e-4bc4-bbfb-2999b956e3bd|rid=RID_250897781|rpid=-620313266|domain=bmfbovespa.com.br"></script><style type="text/css">
+          table
+          {
+          border-collapse: collapse;
+          }
+          table, td, th
+          {
+          border: 1px solid black;
+ 
