@@ -1,12 +1,17 @@
 name: probe-data-sources
 on:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: B3 COTAHIST diario
         run: |
+          exec >> $GITHUB_WORKSPACE/../probe.txt 2>&1
+          echo "########## $GITHUB_STEP"
           UA="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36"
           for i in 0 1 2 3 4 5; do
             D=$(date -d "-$i day" +%d%m%Y)
@@ -22,12 +27,16 @@ jobs:
           done
       - name: CVM informe mensal FII
         run: |
+          exec >> $GITHUB_WORKSPACE/../probe.txt 2>&1
+          echo "########## $GITHUB_STEP"
           curl -s -I "https://dados.cvm.gov.br/dados/FII/DOC/INF_MENSAL/DADOS/inf_mensal_fii_2026.zip" | head -12
           curl -s -o cvm.zip "https://dados.cvm.gov.br/dados/FII/DOC/INF_MENSAL/DADOS/inf_mensal_fii_2026.zip"
           ls -la cvm.zip; unzip -o -q cvm.zip -d cvm; ls -la cvm
           for f in cvm/*.csv; do echo "== $f"; head -c 1500 "$f" | iconv -f latin1 -t utf8; echo; grep -a "MXRF\|97.521.225" "$f" | tail -2 | iconv -f latin1 -t utf8; echo; done
       - name: FNET listagem
         run: |
+          exec >> $GITHUB_WORKSPACE/../probe.txt 2>&1
+          echo "########## $GITHUB_STEP"
           UA="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36"
           B="https://fnet.bmfbovespa.com.br/fnet/publico"
           echo "--- geral"
@@ -42,3 +51,13 @@ jobs:
           (base64 -d doc.bin 2>/dev/null || cat doc.bin) | head -c 4000
           echo; echo "--- exibir"
           curl -s -A "$UA" "$B/exibirDocumento?id=$ID&cvm=true" | head -c 800
+      - name: Save results
+        if: always()
+        run: |
+          cd $GITHUB_WORKSPACE
+          git config user.email bot@users.noreply.github.com; git config user.name bot
+          git checkout --orphan probe-out
+          git rm -rfq . || true
+          cp ../probe.txt probe.txt
+          git add probe.txt; git commit -qm probe
+          git push -f origin probe-out
