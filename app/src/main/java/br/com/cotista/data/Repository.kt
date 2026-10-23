@@ -110,14 +110,17 @@ class Repository(context: Context) {
         while (out.size < count) {
             val len = minOf(page, count - out.size)
             val cacheFile = File(dir, "fnetlist_${cnpj ?: "all"}_$start.json")
-            val json = runCatching {
+            val json: String? = try {
                 val fresh = cacheFile.exists() && System.currentTimeMillis() - cacheFile.lastModified() < maxAge
                 if (fresh) cacheFile.readText() else {
                     val r = Http.get(Fnet.listUrl(start, len, cnpj), Fnet.headers, 30_000)
                     if (!r.ok) error("FNET ${r.code}")
                     r.text().also { cacheFile.writeText(it) }
                 }
-            }.getOrElse { if (cacheFile.exists()) cacheFile.readText() else if (out.isEmpty()) throw it else break }
+            } catch (e: Exception) {
+                if (cacheFile.exists()) cacheFile.readText() else if (out.isEmpty()) throw e else null
+            }
+            if (json == null) break
             val refs = Fnet.parseList(json)
             out.addAll(refs)
             if (refs.size < len) break

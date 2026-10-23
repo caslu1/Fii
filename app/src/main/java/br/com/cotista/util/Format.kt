@@ -73,7 +73,7 @@ fun relativeDay(d: LocalDate, today: LocalDate = LocalDate.now()): String {
         0L -> "Hoje"
         1L -> "Amanhã"
         -1L -> "Ontem"
-        in 2..6 -> "Em $diff dias"
+        in 2L..6L -> "Em $diff dias"
         else -> d.ddMM()
     }
 }
