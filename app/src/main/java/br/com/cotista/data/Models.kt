@@ -67,7 +67,8 @@ data class Fund(
     val pvp: Double? get() {
         val p = price ?: return null
         val vp = cvm?.vpCota ?: return null
-        return if (vp > 0) p / vp else null
+        val r = if (vp > 0) p / vp else return null
+        return if (r in 0.2..5.0) r else null   // descarta informes com VP inconsistente
     }
     val segment: String get() = cvm?.segment?.takeIf { it.isNotBlank() }?.let(::prettySegment) ?: "Outros"
 
@@ -82,7 +83,7 @@ data class Fund(
     val dyLast: Double? get() {
         val p = price ?: return null
         val d = lastDividend ?: return cvm?.let { c -> if (c.dyMonth != null && c.vpCota != null && p > 0) c.dyMonth * c.vpCota / p else null }
-        return if (p > 0) d.value / p else null
+        return if (p > 0 && d.value > 0) d.value / p else null
     }
 
     fun sumLast12m(today: LocalDate = LocalDate.now()): Double {

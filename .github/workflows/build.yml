@@ -21,11 +21,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11.1'
-      - name: Fonte Manrope (OFL)
+      - name: Fonte Manrope (OFL, estática)
         run: |
           mkdir -p app/src/main/res/font
-          curl -sfL -o app/src/main/res/font/manrope.ttf "https://github.com/google/fonts/raw/main/ofl/manrope/Manrope%5Bwght%5D.ttf"
+          curl -s -A "Mozilla/4.0" "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800" > fonts.css
+          cat fonts.css | head -40
+          for pair in 400:regular 500:medium 600:semibold 700:bold 800:extrabold; do
+            W=${pair%%:*}; N=${pair##*:}
+            URL=$(awk -v w="font-weight: $W;" 'index($0,w){f=1} f && /src:/ {match($0,/https:[^)]*/); print substr($0,RSTART,RLENGTH); exit}' fonts.css)
+            echo "$W -> $URL"
+            curl -sfL -o app/src/main/res/font/manrope_$N.ttf "$URL"
+          done
           ls -la app/src/main/res/font
+          file app/src/main/res/font/*
       - name: Build release APK
         run: |
           set -o pipefail

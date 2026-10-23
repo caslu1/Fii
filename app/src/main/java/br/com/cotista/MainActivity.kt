@@ -162,16 +162,6 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
 
     Scaffold(
         containerColor = C.Bg,
-        floatingActionButton = {
-            if (route == "carteira" && state.positions.isNotEmpty()) {
-                ExtendedFloatingActionButton(
-                    modifier = Modifier.padding(bottom = 84.dp),
-                    onClick = { openSheet(null) }, containerColor = C.Mint, contentColor = C.Bg,
-                    shape = RoundedCornerShape(18.dp),
-                    icon = { Icon(Icons.Rounded.Add, null) }, text = { Text("Adicionar") },
-                )
-            }
-        },
     ) { inner ->
         val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         val pad = PaddingValues(bottom = if (isTab) navBottom + 84.dp else navBottom)

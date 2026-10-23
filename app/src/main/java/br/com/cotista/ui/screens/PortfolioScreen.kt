@@ -86,11 +86,24 @@ fun PortfolioScreen(
 
     LazyColumn(
         Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp, contentPadding.calculateTopPadding() + 8.dp, 16.dp, contentPadding.calculateBottomPadding() + 96.dp),
+        contentPadding = PaddingValues(16.dp, contentPadding.calculateTopPadding() + 8.dp, 16.dp, contentPadding.calculateBottomPadding() + 24.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item {
-            Text("Carteira", style = MaterialTheme.typography.headlineLarge, color = C.Text)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Carteira", style = MaterialTheme.typography.headlineLarge, color = C.Text, modifier = Modifier.weight(1f))
+                if (state.positions.isNotEmpty()) {
+                    Row(
+                        Modifier.clip(RoundedCornerShape(50)).background(C.mintBrush).clickable { onAdd(null) }
+                            .padding(horizontal = 16.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(Icons.Rounded.Add, null, tint = C.Bg, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Adicionar", style = MaterialTheme.typography.labelLarge, color = C.Bg)
+                    }
+                }
+            }
             Spacer(Modifier.height(8.dp))
         }
         if (state.positions.isEmpty()) {
