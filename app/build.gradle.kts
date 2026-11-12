@@ -16,10 +16,20 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        create("cotista") {
+            storeFile = rootProject.file("keystore/cotista.jks")
+            storePassword = "cotista123"
+            keyAlias = "cotista"
+            keyPassword = "cotista123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
+            // chave fixa: todas as versões têm a mesma assinatura e instalam por cima da anterior
+            signingConfig = signingConfigs.getByName("cotista")
         }
     }
     compileOptions {
