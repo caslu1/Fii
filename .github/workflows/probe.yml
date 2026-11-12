@@ -8,49 +8,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: B3 COTAHIST diario
+      - name: CVM cabeçalhos completos
         run: |
           exec >> $GITHUB_WORKSPACE/../probe.txt 2>&1
-          echo "########## $GITHUB_STEP"
-          UA="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36"
-          for i in 0 1 2 3 4 5; do
-            D=$(date -d "-$i day" +%d%m%Y)
-            CODE=$(curl -s -A "$UA" -o c.zip -w "%{http_code}" "https://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_D$D.ZIP")
-            echo "$D -> $CODE $(stat -c %s c.zip) $(head -c 2 c.zip | xxd -p)"
-            if [ "$(head -c 2 c.zip | xxd -p)" = "504b" ]; then
-              unzip -o -q c.zip -d c; ls -la c; F=$(ls c/* | head -1)
-              grep -a "^01.\{8\}12" "$F" | head -3
-              grep -a "MXRF11" "$F" | head -2
-              echo "FII lines: $(grep -a -c '^01.\{8\}12' "$F")"
-              break
-            fi
-          done
-      - name: CVM informe mensal FII
-        run: |
-          exec >> $GITHUB_WORKSPACE/../probe.txt 2>&1
-          echo "########## $GITHUB_STEP"
-          curl -s -I "https://dados.cvm.gov.br/dados/FII/DOC/INF_MENSAL/DADOS/inf_mensal_fii_2026.zip" | head -12
           curl -s -o cvm.zip "https://dados.cvm.gov.br/dados/FII/DOC/INF_MENSAL/DADOS/inf_mensal_fii_2026.zip"
-          ls -la cvm.zip; unzip -o -q cvm.zip -d cvm; ls -la cvm
-          for f in cvm/*.csv; do echo "== $f"; head -c 1500 "$f" | iconv -f latin1 -t utf8; echo; grep -a "MXRF\|97.521.225" "$f" | tail -2 | iconv -f latin1 -t utf8; echo; done
-      - name: FNET listagem
+          unzip -o -q cvm.zip -d cvm
+          for f in cvm/*.csv; do
+            echo "== $f"
+            head -1 "$f" | iconv -f latin1 -t utf8 | tr ';' '\n' | nl
+            echo "-- MXRF (último)"
+            grep -a "97.521.225" "$f" | tail -1 | iconv -f latin1 -t utf8 | tr ';' '\n' | nl
+            echo "-- HGLG (último)"
+            grep -a "11.728.688" "$f" | tail -1 | iconv -f latin1 -t utf8 | tr ';' '\n' | nl
+          done
+      - name: FNET tipos de documento de um fundo
         run: |
           exec >> $GITHUB_WORKSPACE/../probe.txt 2>&1
-          echo "########## $GITHUB_STEP"
           UA="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36"
           B="https://fnet.bmfbovespa.com.br/fnet/publico"
-          echo "--- geral"
-          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=3&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0" | head -c 3000; echo
-          echo "--- cnpjFundo"
-          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=3&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0&cnpjFundo=97521225000125" | head -c 1500; echo
-          echo "--- cnpj"
-          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=3&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0&cnpj=97521225000125" | head -c 1500; echo
-          ID=$(curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=1&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
-          echo "--- doc $ID"
-          curl -s -A "$UA" "$B/downloadDocumento?id=$ID" -o doc.bin; ls -la doc.bin; head -c 300 doc.bin; echo
-          (base64 -d doc.bin 2>/dev/null || cat doc.bin) | head -c 4000
-          echo; echo "--- exibir"
-          curl -s -A "$UA" "$B/exibirDocumento?id=$ID&cvm=true" | head -c 800
+          echo "--- todos os docs MXRF"
+          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=40&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&cnpjFundo=97521225000125" > all.json
+          python3 -c "
+          import json; d=json.load(open('all.json'))
+          print('total', d.get('recordsTotal'))
+          for x in d['data']: print(x['id'], '|', x.get('categoriaDocumento'), '|', x.get('tipoDocumento'), '|', x.get('especieDocumento'), '|', x.get('dataReferencia'), '|', x.get('dataEntrega'), '|', x.get('formatoDataReferencia'))
+          "
+          for c in 7 6 3; do
+            echo "--- categoria $c"
+            curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/pesquisarGerenciadorDocumentosDados?d=0&s=0&l=5&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=$c&cnpjFundo=97521225000125" | python3 -c "
+          import json,sys; d=json.load(sys.stdin)
+          for x in d['data']: print(x['id'], '|', x.get('categoriaDocumento'), '|', x.get('tipoDocumento'), '|', x.get('dataReferencia'))
+          "
+          done
+          echo "--- tipos para categoria 7"
+          curl -s -A "$UA" -H "X-Requested-With: XMLHttpRequest" "$B/listarTodosTiposPorCategoriaETipoFundo?idTipoFundo=1&idCategoria=7" | head -c 2000; echo
+          ID=$(python3 -c "
+          import json; d=json.load(open('all.json'))
+          for x in d['data']:
+            if 'Gerencial' in (x.get('tipoDocumento') or ''): print(x['id']); break
+          ")
+          echo "--- relatorio gerencial id=$ID"
+          curl -s -A "$UA" -D h.txt -o rg.bin "$B/downloadDocumento?id=$ID"; cat h.txt; ls -la rg.bin; head -c 120 rg.bin | xxd | head -4
+          curl -s -A "$UA" -D h2.txt -o rg2.bin "$B/exibirDocumento?id=$ID&cvm=true"; cat h2.txt; head -c 120 rg2.bin | xxd | head -4
       - name: Save results
         if: always()
         run: |
