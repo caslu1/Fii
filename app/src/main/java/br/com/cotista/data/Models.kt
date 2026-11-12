@@ -83,9 +83,13 @@ data class Fund(
 
     val dyLast: Double? get() {
         val p = price ?: return null
-        val d = lastDividend ?: return cvm?.let { c -> if (c.dyMonth != null && c.vpCota != null && p > 0) c.dyMonth * c.vpCota / p else null }
-        val dy = if (p > 0 && d.value > 0) d.value / p else return null
-        return if (dy >= 0.0005) dy else null
+        val d = lastDividend
+        val dy = if (d != null) {
+            if (p > 0 && d.value > 0) d.value / p else null
+        } else {
+            cvm?.let { c -> if (c.dyMonth != null && c.vpCota != null && p > 0) c.dyMonth * c.vpCota / p else null }
+        }
+        return dy?.takeIf { it >= 0.0005 }
     }
 
     fun sumLast12m(today: LocalDate = LocalDate.now()): Double {
