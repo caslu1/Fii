@@ -69,6 +69,7 @@ fun FundDetailScreen(
     onBack: () -> Unit,
     onAdd: (String) -> Unit,
     onEnsure: (String) -> Unit,
+    onOpenBalance: (String) -> Unit = {},
 ) {
     LaunchedEffect(ticker, state.funds.isNotEmpty()) { onEnsure(ticker) }
     val f = state.funds[ticker]
@@ -156,6 +157,8 @@ fun FundDetailScreen(
                     }
                 }
             }
+
+            if (f.balances.isNotEmpty()) item { BalanceTeaser(f) { onOpenBalance(ticker) } }
 
             item { Simulator(f.lastDividend?.value, f.price) }
 

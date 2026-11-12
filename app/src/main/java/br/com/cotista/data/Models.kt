@@ -61,6 +61,7 @@ data class Fund(
     val cvm: CvmFund?,
     val history: List<CvmPoint>,
     val dividends: List<Dividend>,
+    val balances: List<Balance> = emptyList(),
 ) {
     val name: String get() = cvm?.name?.takeIf { it.isNotBlank() }?.let(::prettyName) ?: quote?.shortName ?: ticker
     val price: Double? get() = quote?.price
@@ -83,7 +84,8 @@ data class Fund(
     val dyLast: Double? get() {
         val p = price ?: return null
         val d = lastDividend ?: return cvm?.let { c -> if (c.dyMonth != null && c.vpCota != null && p > 0) c.dyMonth * c.vpCota / p else null }
-        return if (p > 0 && d.value > 0) d.value / p else null
+        val dy = if (p > 0 && d.value > 0) d.value / p else return null
+        return if (dy >= 0.0005) dy else null
     }
 
     fun sumLast12m(today: LocalDate = LocalDate.now()): Double {
@@ -137,4 +139,71 @@ fun prettySegment(raw: String): String {
         s.isBlank() -> "Outros"
         else -> raw.trim().lowercase().replaceFirstChar { it.uppercase() }
     }
+}
+
+/** Balanço mensal do FII, a partir do informe mensal estruturado da CVM. */
+data class Balance(
+    val ref: LocalDate,
+    val totalAssets: Double?,
+    val netWorth: Double?,
+    val shares: Double?,
+    val vpCota: Double?,
+    val adminFee: Double?,          // fração do PL no mês
+    val returnEffective: Double?,   // rentabilidade efetiva do mês
+    val returnPatrimonial: Double?, // variação patrimonial do mês
+    val dy: Double?,
+    val amortization: Double?,
+    val holders: Int?,
+    val holdersPF: Int?,
+    // ativo
+    val liquidity: Double,
+    val realEstate: Double,
+    val realEstateIncome: Double,
+    val realEstateConstruction: Double,
+    val realEstateForSale: Double,
+    val land: Double,
+    val cri: Double,
+    val lci: Double,
+    val fiiShares: Double,
+    val companies: Double,
+    val otherSecurities: Double,
+    val receivables: Double,
+    val rentReceivable: Double,
+    // passivo
+    val liabilities: Double,
+    val dividendsPayable: Double,
+    val adminFeePayable: Double,
+    val propertyObligations: Double,
+    val securitization: Double,
+    val provisions: Double,
+) {
+    data class Slice(val label: String, val value: Double)
+
+    /** Composição do ativo, do maior para o menor. */
+    val composition: List<Slice>
+        get() {
+            val parts = listOf(
+                Slice("Imóveis", realEstate),
+                Slice("CRI", cri),
+                Slice("Cotas de outros FIIs", fiiShares),
+                Slice("LCI / LIG", lci),
+                Slice("Ações e SPEs", companies),
+                Slice("Caixa e renda fixa", liquidity),
+                Slice("Valores a receber", receivables),
+                Slice("Outros títulos", otherSecurities),
+            )
+            val known = parts.sumOf { it.value }
+            val total = totalAssets ?: known
+            val rest = total - known
+            val withRest = if (total > 0 && rest / total > 0.005) parts + Slice("Outros", rest) else parts
+            return withRest.filter { it.value > 0 }.sortedByDescending { it.value }
+        }
+
+    val compositionTotal: Double get() = composition.sumOf { it.value }
+
+    /** Passivo sobre o patrimônio líquido. */
+    val leverage: Double? get() = netWorth?.takeIf { it > 0 }?.let { liabilities / it }
+
+    val mainExposure: String
+        get() = composition.firstOrNull()?.label ?: "—"
 }

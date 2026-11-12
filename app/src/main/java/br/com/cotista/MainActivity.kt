@@ -78,6 +78,7 @@ import br.com.cotista.ui.AppViewModel
 import br.com.cotista.ui.UiState
 import br.com.cotista.ui.screens.AddPositionSheet
 import br.com.cotista.ui.screens.AgendaScreen
+import br.com.cotista.ui.screens.BalanceScreen
 import br.com.cotista.ui.screens.ExploreScreen
 import br.com.cotista.ui.screens.FundDetailScreen
 import br.com.cotista.ui.screens.HomeScreen
@@ -191,7 +192,12 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
                     composable("explorar") { ExploreScreen(state, PaddingValues(bottom = pad.calculateBottomPadding()), openFund) }
                     composable("fii/{t}") { e ->
                         val t = e.arguments?.getString("t") ?: ""
-                        FundDetailScreen(t, state, onBack = { nav.popBackStack() }, onAdd = { openSheet(it) }, onEnsure = vm::ensureFund)
+                        FundDetailScreen(t, state, onBack = { nav.popBackStack() }, onAdd = { openSheet(it) }, onEnsure = vm::ensureFund,
+                            onOpenBalance = { nav.navigate("balanco/$it") })
+                    }
+                    composable("balanco/{t}") { e ->
+                        val t = e.arguments?.getString("t") ?: ""
+                        BalanceScreen(t, state, onBack = { nav.popBackStack() }, onLoadReports = vm::loadReports)
                     }
                 }
             }
@@ -223,7 +229,8 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
             nav.navigate(t) { launchSingleTop = true }
         }
         intent.getStringExtra("fund")?.let { f -> nav.navigate("fii/$f") }
-        intent.removeExtra("tab"); intent.removeExtra("fund")
+        intent.getStringExtra("balanco")?.let { f -> nav.navigate("balanco/$f") }
+        intent.removeExtra("tab"); intent.removeExtra("fund"); intent.removeExtra("balanco")
     }
 
     if (sheetOpen) {

@@ -29,6 +29,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -159,6 +160,85 @@ fun SegmentBar(slices: List<Pair<Color, Double>>, modifier: Modifier = Modifier)
             val w = (v / total).toFloat() * size.width
             drawRoundRect(c, Offset(x, 0f), Size((w - 3f).coerceAtLeast(1f), size.height), CornerRadius(size.height / 2))
             x += w
+        }
+    }
+}
+
+/** Linha com área em gradiente, escala min–max e toque para selecionar um ponto. */
+@Composable
+fun LineChart(
+    values: List<Double>,
+    labels: List<String>,
+    modifier: Modifier = Modifier,
+    height: Dp = 140.dp,
+    color: Color = C.Mint,
+    header: @Composable (Int) -> Unit = {},
+) {
+    if (values.size < 2) return
+    var selected by remember(values.size) { mutableIntStateOf(values.lastIndex) }
+    val anim = remember { Animatable(0f) }
+    LaunchedEffect(values) { anim.snapTo(0f); anim.animateTo(1f, tween(800, easing = FastOutSlowInEasing)) }
+    val min = values.minOrNull() ?: 0.0
+    val max = values.maxOrNull() ?: 1.0
+    val span = (max - min).takeIf { it > 1e-9 } ?: (kotlin.math.abs(max) * 0.05).coerceAtLeast(1e-6)
+
+    Column(modifier.fillMaxWidth()) {
+        header(selected.coerceIn(0, values.lastIndex))
+        Spacer(Modifier.height(14.dp))
+        Canvas(
+            Modifier.fillMaxWidth().height(height).pointerInput(values.size) {
+                detectTapGestures { off ->
+                    val step = size.width / (values.size - 1).toFloat()
+                    selected = (off.x / step + 0.5f).toInt().coerceIn(0, values.lastIndex)
+                }
+            },
+        ) {
+            val pad = 10f
+            val h = size.height - pad * 2
+            val step = size.width / (values.size - 1)
+            fun pt(i: Int): Offset {
+                val y = pad + h - ((values[i] - min) / span).toFloat() * h
+                return Offset(i * step, y)
+            }
+            val dash = PathEffect.dashPathEffect(floatArrayOf(6f, 8f))
+            for (i in 0..3) {
+                val y = pad + h * i / 3f
+                drawLine(C.Stroke, Offset(0f, y), Offset(size.width, y), 1.5f, pathEffect = dash)
+            }
+            val visible = ((values.size - 1) * anim.value).toInt() + 1
+            val line = Path()
+            val area = Path()
+            for (i in 0 until visible) {
+                val p = pt(i)
+                if (i == 0) { line.moveTo(p.x, p.y); area.moveTo(p.x, size.height); area.lineTo(p.x, p.y) }
+                else {
+                    val prev = pt(i - 1)
+                    val mx = (prev.x + p.x) / 2
+                    line.cubicTo(mx, prev.y, mx, p.y, p.x, p.y)
+                    area.cubicTo(mx, prev.y, mx, p.y, p.x, p.y)
+                }
+            }
+            val last = pt(visible - 1)
+            area.lineTo(last.x, size.height); area.close()
+            drawPath(area, Brush.verticalGradient(listOf(color.copy(alpha = 0.28f), Color.Transparent)))
+            drawPath(line, color, style = Stroke(width = 5f, cap = StrokeCap.Round))
+            if (selected < visible) {
+                val s = pt(selected)
+                drawLine(color.copy(alpha = 0.35f), Offset(s.x, 0f), Offset(s.x, size.height), 2f, pathEffect = dash)
+                drawCircle(C.Bg, 11f, s)
+                drawCircle(color, 7f, s)
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+        Row(Modifier.fillMaxWidth()) {
+            labels.forEachIndexed { i, l ->
+                val show = i == 0 || i == labels.lastIndex || i == selected || (labels.size <= 7)
+                Text(
+                    if (show) l else "", Modifier.weight(1f), textAlign = TextAlign.Center, maxLines = 1,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (i == selected) C.Text else C.Text3,
+                )
+            }
         }
     }
 }

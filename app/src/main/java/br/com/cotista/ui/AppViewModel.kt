@@ -31,6 +31,8 @@ data class UiState(
     val hideValues: Boolean = false,
     val loadingFund: String? = null,
     val manualRefresh: Boolean = false,
+    val reports: Map<String, List<br.com.cotista.data.Fnet.DocRef>> = emptyMap(),
+    val reportsLoading: String? = null,
 ) {
     val fundList: List<Fund> get() = funds.values.sortedByDescending { it.quote?.volume ?: 0.0 }
 }
@@ -127,6 +129,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
             val cnpj = c?.isinToCnpj?.get(quote.isin)
             val cvmFund = cnpj?.let { c?.latest?.get(it) }
             val history = cnpj?.let { c?.history?.get(it) }.orEmpty()
+            val balances = cnpj?.let { c?.balances?.get(it) }.orEmpty()
             val estimated = history.mapNotNull { p ->
                 val dy = p.dyMonth ?: return@mapNotNull null
                 val vp = p.vpCota ?: return@mapNotNull null
@@ -136,12 +139,29 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
             funds[quote.ticker] = Fund(
                 ticker = quote.ticker, quote = quote, cvm = cvmFund, history = history,
                 dividends = byTicker[quote.ticker].orEmpty() + estimated,
+                balances = balances,
             )
         }
         val announcements = all.filter { funds.containsKey(it.ticker) }
             .sortedByDescending { it.comDate ?: it.payDate }
         _state.update {
             it.copy(funds = funds, announcements = announcements, quoteDate = q?.date, cvmRef = c?.refDate)
+        }
+    }
+
+    /** Lista de relatórios gerenciais do fundo (abre o PDF no navegador). */
+    fun loadReports(ticker: String) {
+        if (_state.value.reports.containsKey(ticker)) return
+        val cnpj = _state.value.funds[ticker]?.cvm?.cnpj ?: return
+        viewModelScope.launch {
+            _state.update { it.copy(reportsLoading = ticker) }
+            val list = runCatching { repo.fundReports(cnpj) }.getOrNull()
+            _state.update { s ->
+                s.copy(
+                    reportsLoading = null,
+                    reports = if (list != null) s.reports + (ticker to list.distinctBy { it.reference.ifEmpty { it.id.toString() } }) else s.reports,
+                )
+            }
         }
     }
 

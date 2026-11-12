@@ -103,17 +103,22 @@ class Repository(context: Context) {
             fetchAll(refs) { _, _ -> }
         }
 
-    private fun listRefs(cnpj: String?, count: Int, maxAge: Long): List<Fnet.DocRef> {
+    /** Relatórios gerenciais (PDF) publicados pelo fundo no FNET. */
+    suspend fun fundReports(cnpj: String, count: Int = 24): List<Fnet.DocRef> = withContext(Dispatchers.IO) {
+        listRefs(cnpj, count, 12 * 3_600_000L, category = 7, type = 9)
+    }
+
+    private fun listRefs(cnpj: String?, count: Int, maxAge: Long, category: Int = 14, type: Int = 41): List<Fnet.DocRef> {
         val out = ArrayList<Fnet.DocRef>()
         val page = 100
         var start = 0
         while (out.size < count) {
             val len = minOf(page, count - out.size)
-            val cacheFile = File(dir, "fnetlist_${cnpj ?: "all"}_$start.json")
+            val cacheFile = File(dir, "fnetlist_${category}_${type}_${cnpj ?: "all"}_$start.json")
             val json: String? = try {
                 val fresh = cacheFile.exists() && System.currentTimeMillis() - cacheFile.lastModified() < maxAge
                 if (fresh) cacheFile.readText() else {
-                    val r = Http.get(Fnet.listUrl(start, len, cnpj), Fnet.headers, 30_000)
+                    val r = Http.get(Fnet.listUrl(start, len, cnpj, category, type), Fnet.headers, 30_000)
                     if (!r.ok) error("FNET ${r.code}")
                     r.text().also { cacheFile.writeText(it) }
                 }
