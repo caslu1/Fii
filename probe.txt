@@ -1,0 +1,489 @@
+== cvm/inf_mensal_fii_ativo_passivo_2026.csv
+     1	CNPJ_Fundo_Classe
+     2	Data_Referencia
+     3	Versao
+     4	Total_Necessidades_Liquidez
+     5	Disponibilidades
+     6	Titulos_Publicos
+     7	Titulos_Privados
+     8	Fundos_Renda_Fixa
+     9	Total_Investido
+    10	Direitos_Bens_Imoveis
+    11	Terrenos
+    12	Imoveis_Renda_Acabados
+    13	Imoveis_Renda_Construcao
+    14	Imoveis_Venda_Acabados
+    15	Imoveis_Venda_Construcao
+    16	Outros_Direitos_Reais
+    17	Acoes
+    18	Debentures
+    19	Bonus_Subscricao
+    20	Certificados_Deposito_Valores_Mobiliarios
+    21	Cedulas_Debentures
+    22	Fundo_Acoes
+    23	FIP
+    24	FII
+    25	FDIC
+    26	Outras_Cotas_FI
+    27	Notas_Promissorias
+    28	Acoes_Sociedades_Atividades_FII
+    29	Cotas_Sociedades_Atividades_FII
+    30	CEPAC
+    31	CRI
+    32	CRI_CRA
+    33	Letras_Hipotecarias
+    34	LCI
+    35	LCI_LCA
+    36	LIG
+    37	Outros_Valores_Mobliarios
+    38	Valores_Receber
+    39	Contas_Receber_Aluguel
+    40	Contas_Receber_Venda_Imoveis
+    41	Outros_Valores_Receber
+    42	Rendimentos_Distribuir
+    43	Taxa_Administracao_Pagar
+    44	Taxa_Performance_Pagar
+    45	Obrigacoes_Aquisicao_Imoveis
+    46	Adiantamento_Venda_Imoveis
+    47	Adiantamento_Alugueis
+    48	Obrigacoes_Securitizacao_Recebiveis
+    49	Instrumentos_Financeiros_Derivativos
+    50	Provisoes_Contigencias
+    51	Outros_Valores_Pagar
+    52	Total_Passivo
+-- MXRF (último)
+     1	97.521.225/0001-25
+     2	2026-09-01
+     3	1
+     4	292940344.69
+     5	63693.8
+     6	0
+     7	0
+     8	292876650.89
+     9	5176421015.19
+    10	287878537.64
+    11	0
+    12	0
+    13	0
+    14	287878537.64
+    15	0
+    16	0
+    17	0
+    18	0
+    19	0
+    20	0
+       
+    21	0
+    22	0
+    23	718369408.35
+    24	0
+    25	0
+    26	0
+    27	277249019.14
+    28	0
+    29	0
+       
+    30	3892924050.06
+    31	0
+       
+    32	0
+    33	0
+    34	0
+    35	20586904.65
+    36	0
+    37	0
+    38	20586904.65
+    39	48047514.41
+    40	3857211.93
+    41	0
+    42	133069843.81
+    43	0
+    44	0
+    45	0
+    46	0
+    47	0
+    48	150609.34
+    49	185125179.49
+-- HGLG (último)
+     1	11.728.688/0001-47
+     2	2026-09-01
+     3	1
+     4	24170713.42
+     5	200
+     6	0
+     7	0
+     8	24170513.42
+     9	8291806411.18
+    10	7060419052.28
+    11	0
+    12	7060419052.28
+    13	0
+    14	0
+    15	0
+    16	0
+    17	0
+    18	0
+    19	0
+    20	0
+       
+    21	0
+    22	0
+    23	148317397.67
+    24	0
+    25	0
+    26	0
+    27	1051691815.4
+    28	0
+    29	0
+       
+    30	31378145.83
+    31	0
+       
+    32	0
+    33	0
+    34	0
+    35	519678210.24
+    36	58780435.7
+    37	29908674.96
+    38	430989099.58
+    39	53364083.37
+    40	3367664.8
+    41	0
+    42	4252256.05
+    43	0
+    44	0
+    45	658265359.42
+    46	0
+    47	0
+    48	570388173.81
+    49	1289637537.45
+== cvm/inf_mensal_fii_complemento_2026.csv
+     1	CNPJ_Fundo_Classe
+     2	Data_Referencia
+     3	Versao
+     4	Data_Informacao_Numero_Cotistas
+     5	Total_Numero_Cotistas
+     6	Numero_Cotistas_Pessoa_Fisica
+     7	Numero_Cotistas_Pessoa_Juridica_Nao_Financeira
+     8	Numero_Cotistas_Banco_Comercial
+     9	Numero_Cotistas_Corretora_Distribuidora
+    10	Numero_Cotistas_Outras_Pessoas_Juridicas_Financeira
+    11	Numero_Cotistas_Investidores_Nao_Residentes
+    12	Numero_Cotistas_Entidade_Aberta_Previdencia_Complementar
+    13	Numero_Cotistas_Entidade_Fechada_Previdência_Complementar
+    14	Numero_Cotistas_Regime_Proprio_Previdencia_Servidores_Publicos
+    15	Numero_Cotistas_Sociedade_Seguradora_Resseguradora
+    16	Numero_Cotistas_Sociedade_Capitalizacao_Arrendamento_Mercantil
+    17	Numero_Cotistas_FII
+    18	Numero_Cotistas_Outros_Fundos
+    19	Numero_Cotistas_Distribuidores_Fundo
+    20	Numero_Cotistas_Outros_Tipos
+    21	Valor_Ativo
+    22	Patrimonio_Liquido
+    23	Cotas_Emitidas
+    24	Valor_Patrimonial_Cotas
+    25	Percentual_Despesas_Taxa_Administracao
+    26	Percentual_Despesas_Agente_Custodiante
+    27	Percentual_Rentabilidade_Efetiva_Mes
+    28	Percentual_Rentabilidade_Patrimonial_Mes
+    29	Percentual_Dividend_Yield_Mes
+    30	Percentual_Amortizacao_Cotas_Mes
+-- MXRF (último)
+     1	97.521.225/0001-25
+     2	2026-09-01
+     3	1
+     4	2026-09-30
+     5	1570595
+     6	1569621
+     7	912
+     8	2
+     9	0
+    10	0
+    11	24
+    12	3
+    13	0
+    14	0
+    15	0
+    16	3
+    17	8
+    18	18
+    19	0
+    20	4
+    21	5489948264.53
+    22	5304823085.04
+    23	567206273
+    24	9.352547
+    25	0.000727
+    26	0
+    27	0.02059
+    28	0.009976
+    29	0.010614
+    30	0
+-- HGLG (último)
+     1	11.728.688/0001-47
+     2	2026-09-01
+     3	1
+     4	2026-09-30
+     5	613837
+     6	613071
+     7	685
+       
+       
+       
+     8	35
+       
+       
+       
+       
+       
+     9	14
+    10	32
+       
+       
+    11	8835655334.84
+    12	7546017797.39
+    13	45601713
+    14	165.476630173739
+    15	0.000446
+    16	8.194027851536E-06
+    17	0.004191
+    18	-0.002861
+    19	0.007052
+    20	0
+== cvm/inf_mensal_fii_geral_2026.csv
+     1	Tipo_Fundo_Classe
+     2	CNPJ_Fundo_Classe
+     3	Data_Referencia
+     4	Versao
+     5	Data_Entrega
+     6	Nome_Fundo_Classe
+     7	Data_Funcionamento
+     8	Publico_Alvo
+     9	Codigo_ISIN
+    10	Quantidade_Cotas_Emitidas
+    11	Fundo_Exclusivo
+    12	Cotistas_Vinculo_Familiar
+    13	Mandato
+    14	Segmento_Atuacao
+    15	Tipo_Gestao
+    16	Prazo_Duracao
+    17	Data_Prazo_Duracao
+    18	Encerramento_Exercicio_Social
+    19	Mercado_Negociacao_Bolsa
+    20	Mercado_Negociacao_MBO
+    21	Mercado_Negociacao_MB
+    22	Entidade_Administradora_BVMF
+    23	Entidade_Administradora_CETIP
+    24	Nome_Administrador
+    25	CNPJ_Administrador
+    26	Logradouro
+    27	Numero
+    28	Complemento
+    29	Bairro
+    30	Cidade
+    31	Estado
+    32	CEP
+    33	Telefone1
+    34	Telefone2
+    35	Telefone3
+    36	Site
+    37	Email
+-- MXRF (último)
+     1	Classe
+     2	97.521.225/0001-25
+     3	2026-09-01
+     4	1
+     5	2026-10-15
+     6	FII MAXI RENDA RL
+     7	2012-04-13
+     8	INVESTIDORES EM GERAL
+     9	BRMXRFCTF008
+    10	567206273
+    11	N
+    12	N
+       
+    13	Logística
+    14	Ativa
+    15	Indeterminado
+       
+    16	31/12
+    17	S
+    18	N
+    19	N
+    20	S
+    21	N
+    22	BTG PACTUAL SERVICOS FINANCEIROS S.A. DISTRIBUIDOR
+    23	59281253000123
+    24	Praia de Botafogo
+    25	501
+    26	6º Andar
+    27	Botafogo
+    28	Rio de Janeiro
+    29	RJ
+    30	22.250-040
+    31	55 11 3383-3102
+       
+       
+    32	www.btgpactual.com
+    33	ri.fundoslistados@btgpactual.com
+-- HGLG (último)
+     1	Classe
+     2	11.728.688/0001-47
+     3	2026-09-01
+     4	1
+     5	2026-10-15
+     6	PÁTRIA LOG - FUNDO DE INVESTIMENTO IMOBILIÁRIO
+     7	2010-05-03
+     8	INVESTIDORES EM GERAL
+     9	BRHGLGCTF004
+    10	45601713
+    11	N
+    12	N
+       
+    13	Multicategoria
+    14	Ativa
+    15	Indeterminado
+       
+    16	31/12
+    17	S
+    18	N
+    19	N
+    20	S
+    21	N
+    22	GENIAL INVESTIMENTOS CORRETORA DE MOBILIARIOS S.A.
+    23	27652684000162
+    24	Praia de Botafogo
+    25	228
+    26	9 ANDAR
+    27	Botafogo
+    28	Rio de Janeiro
+    29	RJ
+    30	222050-906
+    31	(11) 3524-8888
+       
+       
+    32	https://www.bancogenial.com/
+    33	structured-funds@genial.com.vc
+--- todos os docs MXRF
+total 903
+1369013 | Outras Informações | Outros Documentos |  | 04/11/2026 | 04/11/2026 19:07 | 3
+1367646 | Relatórios | Relatório Gerencial |  | 30/09/2026 | 03/11/2026 18:04 | 3
+1365016 | Aviso aos Cotistas - Estruturado | Rendimentos e Amortizações |  | 30/10/2026 | 30/10/2026 16:31 | 3
+1352641 | Informes Periódicos | Informe Mensal Estruturado  |  | 09/2026 | 15/10/2026 18:58 | 2
+1339341 | Relatórios | Relatório Gerencial |  | 31/08/2026 | 02/10/2026 19:47 | 3
+1335757 | Aviso aos Cotistas - Estruturado | Rendimentos e Amortizações |  | 30/09/2026 | 30/09/2026 17:06 | 3
+1321511 | Informes Periódicos | Informe Mensal Estruturado  |  | 08/2026 | 15/09/2026 20:03 | 2
+1307338 | Relatórios | Relatório Gerencial |  | 31/07/2026 | 01/09/2026 18:17 | 3
+1306300 | Relatórios | Relatório Gerencial |  | 31/07/2026 | 31/08/2026 19:43 | 3
+1305736 | Aviso aos Cotistas - Estruturado | Rendimentos e Amortizações |  | 31/08/2026 | 31/08/2026 17:25 | 3
+1293808 | Informes Periódicos | Informe Mensal Estruturado  |  | 07/2026 | 14/08/2026 18:44 | 2
+1290586 | Informes Periódicos | Informe Trimestral Estruturado |  | 30/06/2026 | 13/08/2026 20:15 | 3
+1282167 | Oferta Pública de Distribuição de Cotas | Formulário de Liberação para Negociação das Cotas  |  | 10/08/2026 | 10/08/2026 19:32 | 3
+1280396 | Oferta Pública de Distribuição de Cotas | Anúncio de Encerramento |  | 03/08/2026 | 07/08/2026 17:39 | 3
+1277999 | Relatórios | Relatório Gerencial |  | 30/06/2026 | 05/08/2026 19:57 | 3
+1272055 | Aviso aos Cotistas - Estruturado | Rendimentos e Amortizações |  | 31/07/2026 | 31/07/2026 17:20 | 3
+1271027 | Informes Periódicos | Informe Mensal Estruturado  |  | 06/2026 | 30/07/2026 19:13 | 2
+1263127 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  |  | 23/07/2026 | 23/07/2026 18:45 | 3
+1260670 | Assembleia | AGE | Ata da Assembleia | 19/07/2026 10:00 | 20/07/2026 20:43 | 4
+1251423 | Outras Informações | Outros Documentos |  | 16/07/2026 | 16/07/2026 18:23 | 3
+1250448 | Informes Periódicos | Informe Mensal Estruturado  |  | 06/2026 | 15/07/2026 20:51 | 2
+1247047 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  |  | 10/07/2026 | 14/07/2026 14:43 | 3
+1236643 | Fato Relevante |  |  | 19/06/2026 | 01/07/2026 09:11 | 3
+1235430 | Aviso aos Cotistas - Estruturado | Rendimentos e Amortizações |  | 30/06/2026 | 30/06/2026 17:26 | 3
+1229077 | Oferta Pública de Distribuição de Cotas | Formulário de Subscrição de Cotas (Estruturado) |  | 26/06/2026 | 26/06/2026 10:11 | 3
+1227475 | Relatórios | Relatório Gerencial |  | 30/05/2026 | 24/06/2026 18:26 | 3
+1225197 | Oferta Pública de Distribuição de Cotas | Lâmina de Oferta de Fundos Fechados |  | 19/06/2026 | 22/06/2026 10:01 | 3
+1225195 | Oferta Pública de Distribuição de Cotas | Prospecto | Definitivo | 19/06/2026 | 22/06/2026 09:59 | 3
+1225194 | Oferta Pública de Distribuição de Cotas | Anúncio de Início |  | 19/06/2026 | 22/06/2026 09:59 | 3
+1224742 | Atos de Deliberação do Administrador | Instrumento Particular de Emissão de Cotas |  | 19/06/2026 | 19/06/2026 14:55 | 3
+1224717 | Assembleia | AGE | Ata da Assembleia | 19/06/2026 10:00 | 19/06/2026 14:25 | 4
+1221760 | Informes Periódicos | Informe Mensal Estruturado  |  | 05/2026 | 15/06/2026 18:52 | 2
+1215268 | Relatórios | Relatório Gerencial |  | 30/04/2026 | 09/06/2026 18:12 | 3
+1207869 | Aviso aos Cotistas - Estruturado | Rendimentos e Amortizações |  | 29/05/2026 | 29/05/2026 17:17 | 3
+1204074 | Assembleia | AGE | Proposta do Administrador | 22/06/2026 10:00 | 26/05/2026 18:08 | 4
+1204071 | Assembleia | AGE | Carta Consulta | 22/06/2026 10:00 | 26/05/2026 18:07 | 4
+1201256 | Relatórios | Outros Relatórios |  | 31/03/2026 | 22/05/2026 11:38 | 3
+1201002 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  |  | 20/05/2026 | 21/05/2026 19:40 | 3
+1201001 | Regulamento |  |  | 20/05/2026 | 21/05/2026 19:39 | 3
+1201000 | Atos de Deliberação do Administrador | Instrumento Particular de Alteração do Regulamento |  | 20/05/2026 | 21/05/2026 19:38 | 3
+--- categoria 7
+1367646 | Relatórios | Relatório Gerencial | 30/09/2026
+1339341 | Relatórios | Relatório Gerencial | 31/08/2026
+1307338 | Relatórios | Relatório Gerencial | 31/07/2026
+1306300 | Relatórios | Relatório Gerencial | 31/07/2026
+1277999 | Relatórios | Relatório Gerencial | 30/06/2026
+--- categoria 6
+1352641 | Informes Periódicos | Informe Mensal Estruturado  | 09/2026
+1321511 | Informes Periódicos | Informe Mensal Estruturado  | 08/2026
+1293808 | Informes Periódicos | Informe Mensal Estruturado  | 07/2026
+1290586 | Informes Periódicos | Informe Trimestral Estruturado | 30/06/2026
+1271027 | Informes Periódicos | Informe Mensal Estruturado  | 06/2026
+--- categoria 3
+1263127 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  | 23/07/2026
+1247047 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  | 10/07/2026
+1201002 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  | 20/05/2026
+1189953 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  | 13/05/2026
+1027956 | Comunicado ao Mercado | Outros Comunicados Não Considerados Fatos Relevantes  | 04/11/2025
+--- tipos para categoria 7
+[{"descricao":"Relatório Gerencial","id":9,"situacao":true},{"descricao":"Press - Release","id":10,"situacao":true},{"descricao":"Relatório Anual","id":11,"situacao":true},{"descricao":"Outros Relatórios","id":12,"situacao":true}]
+--- relatorio gerencial id=1367646
+HTTP/2 200 
+date: Thu, 12 Nov 2026 01:56:20 GMT
+content-type: application/pdf; charset=UTF-8
+content-length: 2265916
+server: cloudflare
+x-frame-options: SAMEORIGIN
+x-frame-options: SAMEORIGIN
+expires: 0
+cache-control: no-cache; no-store
+x-xss-protection: 1; mode=block
+pragma: no-cache
+server-timing: dtRpid;desc="-227711142", dtSInfo;desc="0"
+content-disposition: attachment; filename="97521225000125-REL03112026V01-001367646.pdf"
+x-oneagent-js-injection: true
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000 ; includeSubDomains
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+access-control-allow-origin: .b3.com.br; .intraservice.corp
+content-security-policy: frame-ancestors 'self';
+set-cookie: dtCookie=v_4_srv_27_sn_3C380F568EB8FC046EA0FA3A71C32019_perc_100000_ol_0_mul_1_app-3A97e61c3a8a7c6a0b_1_rcs-3Acss_1; Path=/; Domain=.bmfbovespa.com.br
+set-cookie: ROUTEID_FNET=.1; path=/
+set-cookie: ROUTEID_CAUF=.1; path=/
+set-cookie: F051234a800=!ZU4+kZoHpGEQgd9zdNYvOk2VJK81Q3Sv+XdTy3dbHkk9AanfvRx0jAapFhXGDDylWbXB5pYA54p4gIw=; path=/; Httponly; Secure
+cf-cache-status: DYNAMIC
+cf-ray: a591eb6738cc769a-SEA
+
+-rw-r--r-- 1 runner runner 2265916 Nov 12 01:56 rg.bin
+00000000: 2550 4446 2d31 2e37 0d0a 25b5 b5b5 b50d  %PDF-1.7..%.....
+00000010: 0a31 2030 206f 626a 0d0a 3c3c 2f54 7970  .1 0 obj..<</Typ
+00000020: 652f 4361 7461 6c6f 672f 5061 6765 7320  e/Catalog/Pages 
+00000030: 3220 3020 522f 4c61 6e67 2865 6e29 202f  2 0 R/Lang(en) /
+HTTP/2 200 
+date: Thu, 12 Nov 2026 01:56:25 GMT
+content-type: application/pdf; charset=UTF-8
+content-length: 2265916
+server: cloudflare
+x-frame-options: SAMEORIGIN
+x-frame-options: SAMEORIGIN
+expires: 0
+cache-control: no-cache; no-store
+x-xss-protection: 1; mode=block
+pragma: no-cache
+server-timing: dtRpid;desc="-1258851653", dtSInfo;desc="0"
+x-oneagent-js-injection: true
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000 ; includeSubDomains
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+access-control-allow-origin: .b3.com.br; .intraservice.corp
+content-security-policy: frame-ancestors 'self';
+set-cookie: dtCookie=v_4_srv_27_sn_1FBB5905FFDD2B379ABC78EA2FE3D8FC_perc_100000_ol_0_mul_1_app-3A97e61c3a8a7c6a0b_1_rcs-3Acss_0; Path=/; Domain=.bmfbovespa.com.br
+set-cookie: ROUTEID_FNET=.3; path=/
+set-cookie: ROUTEID_CAUF=.3; path=/
+set-cookie: F051234a800=!TrEuBwWPu9dSsnpzdNYvOk2VJK81Q1X0LjPiWLVQvaZwcFxbuLPzCUgVsWpqrYZamyZR9u6xhM5Ftw==; path=/; Httponly; Secure
+cf-cache-status: DYNAMIC
+cf-ray: a591eb85efa4ec54-SEA
+
+00000000: 2550 4446 2d31 2e37 0d0a 25b5 b5b5 b50d  %PDF-1.7..%.....
+00000010: 0a31 2030 206f 626a 0d0a 3c3c 2f54 7970  .1 0 obj..<</Typ
+00000020: 652f 4361 7461 6c6f 672f 5061 6765 7320  e/Catalog/Pages 
+00000030: 3220 3020 522f 4c61 6e67 2865 6e29 202f  2 0 R/Lang(en) /
