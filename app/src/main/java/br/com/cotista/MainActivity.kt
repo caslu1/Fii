@@ -78,7 +78,6 @@ import br.com.cotista.ui.AppViewModel
 import br.com.cotista.ui.UiState
 import br.com.cotista.ui.screens.AddPositionSheet
 import br.com.cotista.ui.screens.AgendaScreen
-import br.com.cotista.ui.screens.BalanceScreen
 import br.com.cotista.ui.screens.ExploreScreen
 import br.com.cotista.ui.screens.FundDetailScreen
 import br.com.cotista.ui.screens.HomeScreen
@@ -183,9 +182,9 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
                     popExitTransition = { fadeOut() + slideOutHorizontally { it / 12 } },
                 ) {
                     composable("home") {
-                        HomeScreen(state, PaddingValues(bottom = pad.calculateBottomPadding()), openFund, openSheet, vm::toggleHide) {
-                            nav.navigate("agenda") { popUpTo(nav.graph.findStartDestination().id) { saveState = true }; launchSingleTop = true; restoreState = true }
-                        }
+                        val goTab: (String) -> Unit = { r -> nav.navigate(r) { popUpTo(nav.graph.findStartDestination().id) { saveState = true }; launchSingleTop = true; restoreState = true } }
+                        HomeScreen(state, PaddingValues(bottom = pad.calculateBottomPadding()), openFund, openSheet, vm::toggleHide,
+                            onOpenAgenda = { goTab("agenda") }, onOpenCarteira = { goTab("carteira") })
                     }
                     composable("carteira") { PortfolioScreen(state, PaddingValues(bottom = pad.calculateBottomPadding()), openFund, openSheet, vm::removePosition) }
                     composable("agenda") { AgendaScreen(state, PaddingValues(bottom = pad.calculateBottomPadding()), openFund) }
@@ -193,11 +192,12 @@ fun AppRoot(vm: AppViewModel = viewModel()) {
                     composable("fii/{t}") { e ->
                         val t = e.arguments?.getString("t") ?: ""
                         FundDetailScreen(t, state, onBack = { nav.popBackStack() }, onAdd = { openSheet(it) }, onEnsure = vm::ensureFund,
-                            onOpenBalance = { nav.navigate("balanco/$it") })
+                            onLoadReports = vm::loadReports)
                     }
                     composable("balanco/{t}") { e ->
                         val t = e.arguments?.getString("t") ?: ""
-                        BalanceScreen(t, state, onBack = { nav.popBackStack() }, onLoadReports = vm::loadReports)
+                        FundDetailScreen(t, state, onBack = { nav.popBackStack() }, onAdd = { openSheet(it) }, onEnsure = vm::ensureFund,
+                            onLoadReports = vm::loadReports, initialTab = 2)
                     }
                 }
             }

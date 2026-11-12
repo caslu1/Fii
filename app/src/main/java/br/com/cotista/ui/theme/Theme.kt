@@ -29,7 +29,7 @@ object C {
     val Lilac = Color(0xFFB69CFF)
     val Text = Color(0xFFF1F6F3)
     val Text2 = Color(0xFFA2B3AB)
-    val Text3 = Color(0xFF66776F)
+    val Text3 = Color(0xFF8A9A92)
 
     val palette = listOf(Mint, Sky, Amber, Lilac, Coral, Color(0xFF4FD1C5), Color(0xFFF08BD0), Color(0xFFA3E635), Color(0xFFFFA26B))
 

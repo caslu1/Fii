@@ -53,6 +53,21 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.text.style.TextAlign
+import br.com.cotista.ui.components.Divider
+import br.com.cotista.ui.components.Donut
+import br.com.cotista.ui.components.Dot
+import br.com.cotista.ui.components.ListPanel
+import br.com.cotista.ui.components.ListRow
+import br.com.cotista.ui.components.PillButton
+import br.com.cotista.ui.components.ScreenHeader
+import br.com.cotista.ui.components.SectionTitle
+import br.com.cotista.ui.components.SegmentedTabs
+import br.com.cotista.util.ddMM
+import br.com.cotista.util.relativeDay
+import java.time.LocalDate
 import br.com.cotista.data.Fund
 import br.com.cotista.data.Position
 import br.com.cotista.ui.Holding
@@ -83,99 +98,186 @@ fun PortfolioScreen(
 ) {
     val summary = remember(state.positions, state.funds) { PortfolioSummary(state.positions, state.funds) }
     val hide = state.hideValues
+    var tab by rememberSaveable { mutableIntStateOf(0) }
+    var menuFor by remember { mutableStateOf<String?>(null) }
+    val today = LocalDate.now()
 
     LazyColumn(
         Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp, contentPadding.calculateTopPadding() + 8.dp, 16.dp, contentPadding.calculateBottomPadding() + 24.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(18.dp, 12.dp, 18.dp, contentPadding.calculateBottomPadding() + 24.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Carteira", style = MaterialTheme.typography.headlineLarge, color = C.Text, modifier = Modifier.weight(1f))
-                if (state.positions.isNotEmpty()) {
-                    Row(
-                        Modifier.clip(RoundedCornerShape(50)).background(C.mintBrush).clickable { onAdd(null) }
-                            .padding(horizontal = 16.dp, vertical = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(Icons.Rounded.Add, null, tint = C.Bg, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Adicionar", style = MaterialTheme.typography.labelLarge, color = C.Bg)
-                    }
-                }
+            ScreenHeader("Carteira") {
+                if (state.positions.isNotEmpty()) PillButton("Adicionar", Icons.Rounded.Add, { onAdd(null) })
             }
-            Spacer(Modifier.height(8.dp))
         }
         if (state.positions.isEmpty()) {
             item {
                 EmptyState(Icons.Rounded.Wallet, "Sua carteira está vazia", "Adicione os FIIs que você tem para acompanhar proventos, preço médio e resultado.") {
-                    Button(onClick = { onAdd(null) }, colors = ButtonDefaults.buttonColors(containerColor = C.Mint, contentColor = C.Bg), shape = RoundedCornerShape(14.dp)) {
-                        Icon(Icons.Rounded.Add, null); Spacer(Modifier.width(6.dp)); Text("Adicionar FII")
-                    }
+                    PillButton("Adicionar FII", Icons.Rounded.Add, { onAdd(null) })
                 }
             }
             return@LazyColumn
         }
+
+        // Resumo
         item {
             Panel {
-                Row {
-                    Stat("Patrimônio", masked(hide, summary.value.brl()), Modifier.weight(1f))
-                    Stat("Investido", masked(hide, summary.invested.brl()), Modifier.weight(1f))
+                Row(verticalAlignment = Alignment.Bottom) {
+                    Column(Modifier.weight(1f)) {
+                        Text("PATRIMÔNIO", style = MaterialTheme.typography.labelSmall, color = C.Text3)
+                        Text(masked(hide, summary.value.brl()), style = MaterialTheme.typography.headlineMedium, color = C.Text)
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(masked(hide, (if (summary.result >= 0) "+" else "") + summary.result.brl()), style = MaterialTheme.typography.titleSmall, color = C.signed(summary.result))
+                        Text(summary.resultPct.pct(2, true), style = MaterialTheme.typography.labelMedium, color = C.signed(summary.result))
+                    }
+                }
+                if (summary.value > 0) {
+                    Spacer(Modifier.height(14.dp))
+                    SegmentBar(summary.holdings.mapIndexed { i, h -> C.palette[i % C.palette.size] to h.value })
                 }
                 Spacer(Modifier.height(14.dp))
                 Row {
-                    Stat("Resultado", masked(hide, summary.result.brl()), Modifier.weight(1f), C.signed(summary.result), summary.resultPct.pct(2, true))
-                    Stat("Renda 12m", masked(hide, summary.last12.brl()), Modifier.weight(1f), C.Mint, "YoC ${summary.yieldOnCost.pct()}")
-                }
-                if (summary.value > 0) {
-                    Spacer(Modifier.height(16.dp))
-                    SegmentBar(summary.holdings.mapIndexed { i, h -> C.palette[i % C.palette.size] to h.value })
+                    Stat("Investido", masked(hide, summary.invested.brl()), Modifier.weight(1f))
+                    Stat("Renda/mês", masked(hide, summary.projectedMonthly.brl()), Modifier.weight(1f), C.Mint)
+                    Stat("Yield on cost", summary.yieldOnCost.pct(), Modifier.weight(1f))
                 }
             }
         }
-        items(summary.holdings, key = { it.position.ticker }) { h ->
-            HoldingCard(h, summary.value, hide, summary.incomeFor(h.position.ticker), { onOpenFund(h.position.ticker) }, { onAdd(h.position.ticker) }, { onRemove(h.position.ticker) })
-        }
-    }
-}
 
-@Composable
-private fun HoldingCard(h: Holding, total: Double, hide: Boolean, income12: Double, onClick: () -> Unit, onEdit: () -> Unit, onRemove: () -> Unit) {
-    var menu by remember { mutableStateOf(false) }
-    val p = h.position
-    Panel(onClick = onClick, padding = 16.dp) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            TickerBadge(p.ticker)
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(p.ticker, style = MaterialTheme.typography.titleMedium, color = C.Text)
-                    Spacer(Modifier.width(8.dp))
-                    ChangePill(h.fund?.quote?.change)
+        item { SegmentedTabs(listOf("Posições", "Proventos", "Alocação"), tab, { tab = it }) }
+
+        when (tab) {
+            0 -> {
+                item {
+                    Row(Modifier.padding(horizontal = 4.dp)) {
+                        Text("FUNDO", style = MaterialTheme.typography.labelSmall, color = C.Text3, modifier = Modifier.weight(1f))
+                        Text("SALDO · RESULTADO", style = MaterialTheme.typography.labelSmall, color = C.Text3)
+                    }
                 }
-                Text(h.fund?.name ?: "", style = MaterialTheme.typography.bodySmall, color = C.Text3, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            }
-            Box {
-                IconButton(onClick = { menu = true }) { Icon(Icons.Rounded.MoreVert, "Opções", tint = C.Text3) }
-                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                    DropdownMenuItem(text = { Text("Editar") }, leadingIcon = { Icon(Icons.Rounded.Edit, null) }, onClick = { menu = false; onEdit() })
-                    DropdownMenuItem(text = { Text("Remover") }, leadingIcon = { Icon(Icons.Rounded.DeleteOutline, null) }, onClick = { menu = false; onRemove() })
+                item {
+                    ListPanel(summary.holdings) { h ->
+                        val p = h.position
+                        val monthly = (h.fund?.lastDividend?.value ?: 0.0) * p.quantity
+                        ListRow(
+                            ticker = p.ticker, title = p.ticker,
+                            subtitle = "${p.quantity.qty()} cotas" + if (monthly > 0) " · ${masked(hide, monthly.brl())}/mês" else "",
+                            value = masked(hide, h.value.brl()),
+                            valueSub = h.resultPct.pct(2, true), valueSubColor = C.signed(h.result),
+                            onClick = { onOpenFund(p.ticker) },
+                            onLongClick = { menuFor = p.ticker },
+                            trailing = {
+                                Box {
+                                    DropdownMenu(expanded = menuFor == p.ticker, onDismissRequest = { menuFor = null }) {
+                                        DropdownMenuItem(text = { Text("Editar") }, leadingIcon = { Icon(Icons.Rounded.Edit, null) }, onClick = { menuFor = null; onAdd(p.ticker) })
+                                        DropdownMenuItem(text = { Text("Remover") }, leadingIcon = { Icon(Icons.Rounded.DeleteOutline, null) }, onClick = { menuFor = null; onRemove(p.ticker) })
+                                    }
+                                }
+                            },
+                        )
+                    }
+                }
+                item {
+                    Text(
+                        "Toque num fundo para ver proventos, balanço e relatórios. Segure para editar ou remover.",
+                        style = MaterialTheme.typography.bodySmall, color = C.Text3, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(),
+                    )
                 }
             }
-        }
-        Spacer(Modifier.height(14.dp))
-        Row {
-            Stat("Cotas", p.quantity.qty(), Modifier.weight(1f))
-            Stat("Preço médio", p.avgPrice.brl(), Modifier.weight(1f))
-            Stat("Atual", h.price.brl(), Modifier.weight(1f))
-        }
-        Spacer(Modifier.height(12.dp))
-        Row {
-            Stat("Saldo", masked(hide, h.value.brl()), Modifier.weight(1f), hint = if (total > 0) "${(h.value / total).pct(1)} da carteira" else null)
-            Stat("Resultado", masked(hide, h.result.brl()), Modifier.weight(1f), C.signed(h.result), h.resultPct.pct(2, true))
-            val last = h.fund?.lastDividend
-            Stat("Últ. provento", last?.value?.brlCota() ?: "—", Modifier.weight(1f), C.Mint,
-                if (hide) null else "12m ${income12.brl()}")
+            1 -> {
+                item {
+                    Row {
+                        Stat("Este mês", masked(hide, summary.thisMonth.brl()), Modifier.weight(1f), C.Mint)
+                        Stat("12 meses", masked(hide, summary.last12.brl()), Modifier.weight(1f))
+                        Stat("Média/mês", masked(hide, summary.avgMonthly.brl()), Modifier.weight(1f))
+                    }
+                }
+                if (summary.upcoming.isNotEmpty()) {
+                    item { SectionTitle("A receber") }
+                    item {
+                        ListPanel(summary.upcoming) { pay ->
+                            val d = pay.dividend
+                            ListRow(
+                                ticker = d.ticker, title = d.ticker,
+                                subtitle = "${relativeDay(d.payDate!!, today)} · ${d.value.brlCota()} por cota",
+                                value = masked(hide, "+" + pay.amount.brl()), valueColor = C.Mint,
+                                onClick = { onOpenFund(d.ticker) },
+                            )
+                        }
+                    }
+                }
+                if (summary.recentPaid.isNotEmpty()) {
+                    item { SectionTitle("Recebidos recentemente") }
+                    item {
+                        ListPanel(summary.recentPaid) { pay ->
+                            val d = pay.dividend
+                            ListRow(
+                                ticker = d.ticker, title = d.ticker,
+                                subtitle = "Pago em ${d.payDate!!.ddMM()} · ${d.value.brlCota()} por cota",
+                                value = masked(hide, pay.amount.brl()),
+                                onClick = { onOpenFund(d.ticker) },
+                            )
+                        }
+                    }
+                }
+                item { SectionTitle("Por fundo nos últimos 12 meses") }
+                item {
+                    val rows = summary.holdings.map { it to summary.incomeFor(it.position.ticker) }.sortedByDescending { it.second }
+                    ListPanel(rows) { (h, v) ->
+                        ListRow(
+                            ticker = h.position.ticker, title = h.position.ticker,
+                            subtitle = if (summary.last12 > 0) "${(v / summary.last12).pct(1)} da sua renda" else "",
+                            value = masked(hide, v.brl()), valueColor = C.Text,
+                            valueSub = if (h.invested > 0) "YoC ${(v / h.invested).pct()}" else null,
+                            onClick = { onOpenFund(h.position.ticker) },
+                        )
+                    }
+                }
+            }
+            else -> {
+                item {
+                    Panel {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Donut(summary.holdings.mapIndexed { i, h -> C.palette[i % C.palette.size] to h.value }, size = 128.dp, thickness = 15.dp) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text("${summary.holdings.size}", style = MaterialTheme.typography.headlineSmall, color = C.Text)
+                                    Text(if (summary.holdings.size == 1) "fundo" else "fundos", style = MaterialTheme.typography.labelSmall, color = C.Text3)
+                                }
+                            }
+                            Spacer(Modifier.width(18.dp))
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                summary.holdings.take(7).forEachIndexed { i, h ->
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Dot(C.palette[i % C.palette.size])
+                                        Spacer(Modifier.width(8.dp))
+                                        Text(h.position.ticker, style = MaterialTheme.typography.bodySmall, color = C.Text2, modifier = Modifier.weight(1f))
+                                        Text(if (summary.value > 0) (h.value / summary.value).pct(1) else "—", style = MaterialTheme.typography.labelMedium, color = C.Text)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                item { SectionTitle("Por segmento") }
+                item {
+                    Panel {
+                        SegmentBar(summary.bySegment.mapIndexed { i, (_, v) -> C.palette[(i + 3) % C.palette.size] to v })
+                        summary.bySegment.forEachIndexed { i, (seg, v) ->
+                            Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Dot(C.palette[(i + 3) % C.palette.size])
+                                Spacer(Modifier.width(8.dp))
+                                Text(seg, style = MaterialTheme.typography.bodyMedium, color = C.Text2, modifier = Modifier.weight(1f))
+                                Text(masked(hide, v.brl()), style = MaterialTheme.typography.labelLarge, color = C.Text)
+                                Spacer(Modifier.width(8.dp))
+                                Text(if (summary.value > 0) (v / summary.value).pct(1) else "—", style = MaterialTheme.typography.labelMedium, color = C.Text3,
+                                    modifier = Modifier.width(48.dp), textAlign = TextAlign.End)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -7,22 +7,22 @@ adb install -r Cotista.apk
 adb shell am start -n br.com.cotista/.MainActivity --ez demo true
 sleep 95
 adb exec-out screencap -p > shots/1_inicio.png
-# detalhe com o resumo do balanço
-adb shell am start -S -n br.com.cotista/.MainActivity --es fund HGLG11
-sleep 35
 adb shell input swipe 540 1900 540 700 500; sleep 3
-adb exec-out screencap -p > shots/2_fundo_resumo_balanco.png
-# tela de balanço completa (papel e tijolo)
-for f in MXRF11 HGLG11; do
-  adb shell am start -S -n br.com.cotista/.MainActivity --es balanco $f
-  sleep 35
-  adb exec-out screencap -p > shots/3_balanco_${f}_a.png
-  adb shell input swipe 540 1900 540 500 600; sleep 3
-  adb exec-out screencap -p > shots/3_balanco_${f}_b.png
-  adb shell input swipe 540 1900 540 500 600; sleep 3
-  adb exec-out screencap -p > shots/3_balanco_${f}_c.png
-  adb shell input swipe 540 1900 540 500 600; sleep 4
-  adb exec-out screencap -p > shots/3_balanco_${f}_d.png
+adb exec-out screencap -p > shots/1_inicio_b.png
+for t in carteira agenda explorar; do
+  adb shell am start -S -n br.com.cotista/.MainActivity --es tab $t
+  sleep 30
+  adb exec-out screencap -p > shots/2_$t.png
 done
+adb shell am start -S -n br.com.cotista/.MainActivity --es fund MXRF11
+sleep 32
+adb exec-out screencap -p > shots/3_fundo.png
+adb shell input swipe 540 1900 540 700 500; sleep 3
+adb exec-out screencap -p > shots/3_fundo_b.png
+adb shell am start -S -n br.com.cotista/.MainActivity --es balanco MXRF11
+sleep 32
+adb exec-out screencap -p > shots/4_balanco.png
+adb shell input swipe 540 1900 540 600 500; sleep 3
+adb exec-out screencap -p > shots/4_balanco_b.png
 adb logcat -d -s AndroidRuntime:E > shots/crash.txt || true
 ls -la shots

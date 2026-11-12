@@ -2,7 +2,9 @@ package br.com.cotista.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -175,3 +177,165 @@ fun Dot(color: Color, size: Dp = 8.dp) {
 }
 
 fun masked(hide: Boolean, s: String) = if (hide) "R$ •••••" else s
+
+// ------------------------------------------------------------------ componentes do visual 2
+
+@Composable
+fun ScreenHeader(title: String, subtitle: String? = null, action: @Composable (() -> Unit)? = null) {
+    Row(Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.headlineLarge, color = C.Text)
+            if (subtitle != null) Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = C.Text3)
+        }
+        action?.invoke()
+    }
+}
+
+@Composable
+fun PillButton(text: String, icon: ImageVector?, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier.height(44.dp).clip(RoundedCornerShape(50)).background(C.mintBrush).clickable(onClick = onClick)
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        if (icon != null) { Icon(icon, null, tint = C.Bg, modifier = Modifier.size(18.dp)); Spacer(Modifier.width(6.dp)) }
+        Text(text, style = MaterialTheme.typography.labelLarge, color = C.Bg)
+    }
+}
+
+@Composable
+fun SegmentedTabs(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(C.Surface)
+            .border(1.dp, C.Stroke, RoundedCornerShape(14.dp)).padding(4.dp),
+    ) {
+        options.forEachIndexed { i, o ->
+            val sel = i == selected
+            Box(
+                Modifier.weight(1f).height(40.dp).clip(RoundedCornerShape(10.dp))
+                    .background(if (sel) C.Surface3 else Color.Transparent).clickable { onSelect(i) },
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(o, style = MaterialTheme.typography.labelLarge, color = if (sel) C.Text else C.Text3, maxLines = 1)
+            }
+        }
+    }
+}
+
+/** Abas sublinhadas (detalhe do fundo). */
+@Composable
+fun UnderlineTabs(options: List<String>, selected: Int, onSelect: (Int) -> Unit) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(Modifier.fillMaxWidth()) {
+            options.forEachIndexed { i, o ->
+                val sel = i == selected
+                Column(
+                    Modifier.clip(RoundedCornerShape(10.dp)).clickable { onSelect(i) }.padding(horizontal = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        o, style = MaterialTheme.typography.labelLarge, color = if (sel) C.Text else C.Text3,
+                        modifier = Modifier.padding(vertical = 12.dp),
+                    )
+                    Box(Modifier.height(2.5.dp).width(if (sel) 28.dp else 0.dp).clip(RoundedCornerShape(2.dp)).background(C.Mint))
+                }
+            }
+        }
+        Box(Modifier.fillMaxWidth().height(1.dp).background(C.Stroke))
+    }
+}
+
+/** Linha de lista: selo, título, subtítulo e dois valores à direita. */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ListRow(
+    ticker: String,
+    title: String,
+    subtitle: String,
+    value: String,
+    valueSub: String? = null,
+    valueColor: Color = C.Text,
+    valueSubColor: Color = C.Text2,
+    tag: String? = null,
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
+    trailing: @Composable (() -> Unit)? = null,
+) {
+    Row(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TickerBadge(ticker, 42.dp)
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(title, style = MaterialTheme.typography.titleSmall, color = C.Text, maxLines = 1)
+                if (tag != null) {
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        tag, style = MaterialTheme.typography.labelSmall, color = C.Mint, maxLines = 1,
+                        modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(C.MintDeep).padding(horizontal = 6.dp, vertical = 2.dp),
+                    )
+                }
+            }
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = C.Text3, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        Spacer(Modifier.width(8.dp))
+        Column(horizontalAlignment = Alignment.End) {
+            Text(value, style = MaterialTheme.typography.titleSmall, color = valueColor, maxLines = 1)
+            if (valueSub != null) Text(valueSub, style = MaterialTheme.typography.labelMedium, color = valueSubColor, maxLines = 1)
+        }
+        trailing?.invoke()
+    }
+}
+
+/** Painel de lista com divisórias entre as linhas. */
+@Composable
+fun <T> ListPanel(items: List<T>, row: @Composable (T) -> Unit) {
+    Panel(padding = 4.dp) {
+        items.forEachIndexed { i, it ->
+            if (i > 0) Divider(Modifier.padding(horizontal = 14.dp))
+            row(it)
+        }
+    }
+}
+
+/** Bloco de número sobre fundo verde (herói). */
+@Composable
+fun GlassTile(label: String, value: String, modifier: Modifier = Modifier, color: Color = C.Text, sub: String? = null, subColor: Color = C.Text2) {
+    Column(modifier.clip(RoundedCornerShape(16.dp)).background(Color.Black.copy(alpha = 0.22f)).padding(horizontal = 12.dp, vertical = 10.dp)) {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = C.Text2, maxLines = 1)
+        Spacer(Modifier.height(3.dp))
+        Text(value, style = MaterialTheme.typography.titleSmall, color = color, maxLines = 1)
+        if (sub != null) Text(sub, style = MaterialTheme.typography.labelSmall, color = subColor, maxLines = 1)
+    }
+}
+
+/** Cartão de número (grade 2×2). */
+@Composable
+fun MetricCard(label: String, value: String, sub: String?, modifier: Modifier = Modifier, valueColor: Color = C.Text, subColor: Color = C.Text3, brush: Brush? = null) {
+    Column(
+        modifier.clip(RoundedCornerShape(18.dp)).let { if (brush != null) it.background(brush) else it.background(C.Surface) }
+            .border(1.dp, C.borderBrush, RoundedCornerShape(18.dp)).padding(14.dp),
+    ) {
+        Text(label.uppercase(), style = MaterialTheme.typography.labelSmall, color = C.Text3, maxLines = 1)
+        Spacer(Modifier.height(4.dp))
+        Text(value, style = MaterialTheme.typography.titleLarge, color = valueColor, maxLines = 1)
+        if (sub != null) Text(sub, style = MaterialTheme.typography.labelMedium, color = subColor, maxLines = 1)
+    }
+}
+
+@Composable
+fun DateBox(weekday: String, day: Int, color: Color = C.Amber) {
+    Column(
+        Modifier.width(48.dp).clip(RoundedCornerShape(14.dp)).background(color.copy(alpha = 0.14f))
+            .border(1.dp, color.copy(alpha = 0.4f), RoundedCornerShape(14.dp)).padding(vertical = 7.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(weekday.uppercase(), style = MaterialTheme.typography.labelSmall, color = color)
+        Text("$day", style = MaterialTheme.typography.titleLarge, color = color)
+    }
+}
