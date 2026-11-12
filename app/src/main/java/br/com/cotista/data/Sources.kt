@@ -88,6 +88,7 @@ object CvmInforme {
         "FDIC", "Outras_Cotas_FI", "Notas_Promissorias", "CEPAC", "Outros_Valores_Mobliarios",
         "Valores_Receber", "Contas_Receber_Aluguel", "Rendimentos_Distribuir", "Taxa_Administracao_Pagar",
         "Obrigacoes_Aquisicao_Imoveis", "Obrigacoes_Securitizacao_Recebiveis", "Provisoes_Contigencias", "Total_Passivo",
+        "Outros_Valores_Pagar", "Adiantamento_Alugueis", "Adiantamento_Venda_Imoveis", "Taxa_Performance_Pagar", "Instrumentos_Financeiros_Derivativos",
     )
 
     private class Row(val ver: Int, val v: DoubleArray)
@@ -255,6 +256,8 @@ object CvmInforme {
                     propertyObligations = a("Obrigacoes_Aquisicao_Imoveis"),
                     securitization = a("Obrigacoes_Securitizacao_Recebiveis"),
                     provisions = a("Provisoes_Contigencias"),
+                    otherPayables = a("Outros_Valores_Pagar") + a("Adiantamento_Alugueis") + a("Adiantamento_Venda_Imoveis") +
+                        a("Taxa_Performance_Pagar") + a("Instrumentos_Financeiros_Derivativos"),
                 ),
             )
         }

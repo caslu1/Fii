@@ -176,6 +176,7 @@ data class Balance(
     val propertyObligations: Double,
     val securitization: Double,
     val provisions: Double,
+    val otherPayables: Double = 0.0,
 ) {
     data class Slice(val label: String, val value: Double)
 

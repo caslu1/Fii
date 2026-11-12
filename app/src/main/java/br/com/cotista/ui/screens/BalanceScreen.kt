@@ -255,6 +255,7 @@ fun BalanceScreen(
                         "Securitização de recebíveis" to b.securitization,
                         "Taxa de administração a pagar" to b.adminFeePayable,
                         "Provisões e contingências" to b.provisions,
+                        "Outros valores a pagar" to b.otherPayables,
                     ).filter { it.second > 0 }
                     rows.forEach { (label, v) -> ValueRow(label, v, b.liabilities, null) }
                     if (rows.isEmpty()) Text("Sem obrigações relevantes informadas.", style = MaterialTheme.typography.bodySmall, color = C.Text3, modifier = Modifier.padding(top = 10.dp))
